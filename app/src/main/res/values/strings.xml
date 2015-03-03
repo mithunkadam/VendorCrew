@@ -11,5 +11,7 @@
     <string name="cms_text">Existing Users can login below</string>
     <string name="cms_login">Login</string>
     <string name="cms_forgetpwd">Forget your password ?</string>
+    <string name="title_activity_add_vendor_category">AddVendorCategoryActivity</string>
+    <string name="title_activity_add_brands">AddBrandsActivity</string>
 
 </resources>
