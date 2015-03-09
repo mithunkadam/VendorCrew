@@ -6,6 +6,13 @@
     <string name="title_activity_sign_in">SignInActivity</string>
 
     <!-- Sign In screen -->
+    <string name="cms_logo">As easiest way to connect with your service provider</string>
+    <string name="cms_signup">Sign Up</string>
+    <string name="cms_text">Existing Users can login below</string>
+    <string name="cms_login">Login</string>
+    <string name="cms_forgetpwd">Forget your password ?</string>
+    <string name="title_activity_add_vendor_category">AddVendorCategoryActivity</string>
+    <string name="title_activity_add_brands">AddBrandsActivity</string>
     <string name="logo">As easiest way to connect with your service provider</string>
     <string name="sign_up">Sign Up</string>
     <string name="or">OR</string>

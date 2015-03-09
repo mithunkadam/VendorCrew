@@ -1,4 +1,4 @@
-package com.acc.vendorcrew.activities.constant;
+package com.acc.vendorcrew.constant;
 
 /**
  * Created by Nilesh on 3/3/2015.
