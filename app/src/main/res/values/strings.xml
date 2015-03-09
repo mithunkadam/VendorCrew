@@ -37,4 +37,12 @@
     <string name="password_error">Minimum 7 digit</string>
     <string name="mob_no_error">Minimum 12 digit with country code</string>
 
+    <!--Menu Content-->
+    <string-array name="menu">
+        <item>Home</item>
+        <item>Profile</item>
+        <item>Account</item>
+        <item>Vendors</item>
+        <item>Logout</item>
+    </string-array>
 </resources>

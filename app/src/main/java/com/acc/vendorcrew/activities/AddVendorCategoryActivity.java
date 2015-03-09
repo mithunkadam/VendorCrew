@@ -6,14 +6,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.acc.vendorcrew.R;
@@ -61,7 +65,7 @@ public class AddVendorCategoryActivity extends Activity {
         View mCustomView = mInflater.inflate(R.layout.custom_actionbar, null);
 
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
-        ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton);
+//        ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton);
 
         ImageView imageView1 = (ImageView)findViewById(R.id.imageView2);
         imageView1.setBackgroundResource(R.drawable.browse);

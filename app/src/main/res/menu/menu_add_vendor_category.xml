@@ -3,13 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.acc.vendorcrew.activities.AddVendorCategoryActivity">
 
+
+    <item android:id="@+id/action_add"
+        android:icon="@drawable/icon_add"
+        android:title="Add"
+        app:showAsAction="never"/>
+
     <item android:id="@+id/action_search"
           android:icon="@drawable/search"
           android:title="Search"
-          android:showAsAction="ifRoom"/>
+          android:showAsAction="always"/>
 
-    <item android:id="@+id/action_menu"
-          android:icon="@drawable/menu"
-          android:title="menu"
-          android:showAsAction="ifRoom"/>
+    <item android:id="@+id/action_settings" android:title="@string/action_settings"
+        android:orderInCategory="100" app:showAsAction="never" />
 </menu>
