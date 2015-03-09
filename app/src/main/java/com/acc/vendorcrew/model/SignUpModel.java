@@ -5,7 +5,6 @@ package com.acc.vendorcrew.model;
  */
 public class SignUpModel {
     private String deviceID;
-    private String name;
     private String emailID;
     private String password;
     private String phoneNumber;
@@ -41,5 +40,4 @@ public class SignUpModel {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-
 }

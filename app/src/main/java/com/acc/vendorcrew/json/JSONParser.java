@@ -39,8 +39,9 @@ public class JSONParser {
         try {
 
             DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(url);
-            // httpPost.setEntity(new UrlEncodedFormEntity(params));
+            HttpPost httpPost;
+            httpPost= new HttpPost(url);
+            httpPost.setHeader("Content-Type", "application/json");
             HttpResponse httpResponse = httpClient.execute(httpPost);
 
             HttpEntity httpEntity = httpResponse.getEntity();
@@ -55,8 +56,7 @@ public class JSONParser {
         }
 
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    is, "UTF-8"), 8);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"), 8);
             StringBuilder sb = new StringBuilder();
             String line = null;
             while ((line = reader.readLine()) != null) {
@@ -75,7 +75,6 @@ public class JSONParser {
         } catch (JSONException e) {
             Log.e("JSON Parser", "Error parsing data " + e.toString());
         }
-
         return jObj1;
     }
 
@@ -103,8 +102,7 @@ public class JSONParser {
         }
 
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    is, "UTF-8"), 8);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"), 8);
             StringBuilder sb = new StringBuilder();
             String line = null;
             while ((line = reader.readLine()) != null) {

@@ -2,12 +2,13 @@ package com.acc.vendorcrew.activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.provider.Settings;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.UnderlineSpan;
@@ -20,9 +21,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.acc.vendorcrew.R;
-import com.acc.vendorcrew.activities.constant.Constant;
+import com.acc.vendorcrew.connectivity.ConnectionDetector;
+import com.acc.vendorcrew.constant.Constant;
 import com.acc.vendorcrew.json.JSONParser;
 
+import org.apache.http.client.methods.HttpPost;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,10 +39,10 @@ public class SignUpActivity extends Activity {
     private Button signUp;
     private EditText name, email, password, mobNo;
     private TextView errorName, errorEmail, errorPassword, errorMobileNo, login;
+
     private Boolean isInternetPresent = false;
     private JSONParser jParser;
     JSONArray jsonArray = null;
-
     public static final String PREFS_NAME = "RegisterPrefs";
 
     @Override
@@ -69,37 +72,9 @@ public class SignUpActivity extends Activity {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (isInternetPresent) {
-                    Toast.makeText(getApplication(), "Network Connection Failed", Toast.LENGTH_SHORT).show();
-                }
-
-                final String uName = name.getText().toString();
-                if (!isValidName(uName)) {
-                    errorName.setVisibility(View.VISIBLE);
-                }else {
-                    errorName.setVisibility(View.GONE);
-                }
-
-                final String uEmail = email.getText().toString();
-                if (!isValidEmail(uEmail)) {
-                    errorEmail.setVisibility(View.VISIBLE);
-                }else {
-                    errorEmail.setVisibility(View.GONE);
-                }
-
-                final String uPassword = password.getText().toString();
-                if (!isValidPassword(uPassword)) {
-                    errorPassword.setVisibility(View.VISIBLE);
-                }else {
-                    errorPassword.setVisibility(View.GONE);
-                }
-
-                final String uMobNo = mobNo.getText().toString();
-                if (!isValidMobNo(uMobNo)) {
-                    errorMobileNo.setVisibility(View.VISIBLE);
-                }else {
-                    errorMobileNo.setVisibility(View.GONE);
+                ConnectionDetector connectionDetector = new ConnectionDetector(getBaseContext());
+                if (isValidUserInfo()) {
+                    new MTRegistration().execute();
                 }
             }
         });
@@ -114,18 +89,55 @@ public class SignUpActivity extends Activity {
 
     }
 
-    private boolean isValidMobNo(String uMobNo) {
-        if(uMobNo.equals("") || uMobNo.length()<12){
-            return false;
-        }else{
+    private boolean isValidUserInfo(){
+        boolean bname, bemail, bpassword, bmobno;
+        final String uName = name.getText().toString();
+        if (!isValidName(uName)) {
+            errorName.setVisibility(View.VISIBLE);
+            bname = false;
+        }else {
+            errorName.setVisibility(View.GONE);
+            bname = true;
+        }
+
+        final String uEmail = email.getText().toString();
+        if (!isValidEmail(uEmail)) {
+            errorEmail.setVisibility(View.VISIBLE);
+            bemail = false;
+        }else {
+            errorEmail.setVisibility(View.GONE);
+            bemail = true;
+        }
+
+        final String uPassword = password.getText().toString();
+        if (!isValidPassword(uPassword)) {
+            errorPassword.setVisibility(View.VISIBLE);
+            bpassword = false;
+        }else {
+            errorPassword.setVisibility(View.GONE);
+            bpassword = true;
+        }
+
+        final String uMobNo = mobNo.getText().toString();
+        if (!isValidMobNo(uMobNo)) {
+            errorMobileNo.setVisibility(View.VISIBLE);
+            bmobno = false;
+        }else {
+            errorMobileNo.setVisibility(View.GONE);
+            bmobno = true;
+        }
+
+        if(bname && bemail && bpassword && bmobno){
             return true;
+        }else {
+            return false;
         }
     }
 
-    private boolean isValidPassword(String uPassword) {
-        if(uPassword.length()<7){
+    private boolean isValidName(String uName) {
+        if(uName.equals("")){
             return false;
-        }else{
+        }else {
             return true;
         }
     }
@@ -137,13 +149,22 @@ public class SignUpActivity extends Activity {
         return matcher.matches();
     }
 
-    private boolean isValidName(String uName) {
-        if(uName.equals("")){
+    private boolean isValidPassword(String uPassword) {
+        if(uPassword.length()<7){
             return false;
-        }else {
+        }else{
             return true;
         }
     }
+
+    private boolean isValidMobNo(String uMobNo) {
+        if(uMobNo.equals("") || uMobNo.length()<12){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
 
     class MTRegistration extends AsyncTask<String, String, ArrayList<Object>> {
 
@@ -156,11 +177,6 @@ public class SignUpActivity extends Activity {
         String webAddressToPost;
 
         @Override
-        protected ArrayList<Object> doInBackground(String... params) {
-            return null;
-        }
-
-        @Override
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(SignUpActivity.this);
@@ -169,24 +185,31 @@ public class SignUpActivity extends Activity {
             pDialog.setCancelable(false);
             pDialog.show();
 
-			/*
-			 * TelephonyManager TelephonyMgr =
-			 * (TelephonyManager)getSystemService(TELEPHONY_SERVICE); String
-			 * m_deviceId = TelephonyMgr.getDeviceId();
-			 */
+            String uEmail = email.getText().toString();
+            String uPassword = password.getText().toString();
+            String uMobNo = mobNo.getText().toString();
 
-            String m_androidId = Settings.Secure.getString(getContentResolver(),
-                    Settings.Secure.ANDROID_ID);
-
-            System.out.println("Device ID " + m_androidId);
+		    TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+            String m_deviceId = telephonyManager.getDeviceId();
 
             webAddressToPost = Constant.REGISTRATION_URL
-                    + Constant.REGISTRATION_EMAIL_ID + email + "&"
-                    + Constant.REGISTRATION_PASS + password + "&"
-                    + Constant.REGISTRATION_MOBILE_NUMBER + mobNo + "&"
-                    + Constant.REGISTRATION_DEVICE_ID + "1234567898";
+                    + Constant.REGISTRATION_EMAIL_ID + uEmail + "&"
+                    + Constant.REGISTRATION_PASS + uPassword + "&"
+                    + Constant.REGISTRATION_MOBILE_NUMBER + uMobNo + "&"
+                    + Constant.REGISTRATION_DEVICE_ID + m_deviceId;
 
             System.out.println("Response in onPreExecute " + webAddressToPost);
+        }
+
+        @Override
+        protected ArrayList<Object> doInBackground(String... arg0) {
+
+            jParser = new JSONParser();
+            ArrayList<Object> jsnObject = jParser.getJSONFromUrl(webAddressToPost);
+
+            System.out.println("Response in doInBackground " + jsnObject);
+
+            return jsnObject;
         }
 
         @Override
@@ -211,9 +234,10 @@ public class SignUpActivity extends Activity {
                     editor.putString("registeredUser", registrationID);
                     editor.commit();
 
-                    Intent intent = new Intent(SignUpActivity.this, SignInActivity.class);
+                    Intent intent = new Intent(SignUpActivity.this, AddVendorCategoryActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
+                    finish();
                 } else {
 
                     System.out.println("Response in registration else "+ jsnObject);
