@@ -13,6 +13,29 @@
     <string name="cms_forgetpwd">Forget your password ?</string>
     <string name="title_activity_add_vendor_category">AddVendorCategoryActivity</string>
     <string name="title_activity_add_brands">AddBrandsActivity</string>
+    <string name="logo">As easiest way to connect with your service provider</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="or">OR</string>
+    <string name="text">Existing Users can login below</string>
+    <string name="email_id">Email ID</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="forget_pwd">Forget your password ?</string>
+    <string name="title_activity_sign_up">SignUp</string>
+
+    <!-- Sign Up screen -->
+    <string name="create_acc">Create an account below</string>
+    <string name="name">Name</string>
+    <string name="mob_no">Mobile No</string>
+    <string name="login_here">Login Here</string>
+    <string name="register_user">Register User?</string>
+    <string name="bottom_text">By signin up, you agree to our terms &amp; services</string>
+    
+    <!-- Error messages -->
+    <string name="name_error">can not blank</string>
+    <string name="email_error">Please enter valid email id</string>
+    <string name="password_error">Minimum 7 digit</string>
+    <string name="mob_no_error">Minimum 12 digit with country code</string>
 
     <!--Menu Content-->
     <string-array name="menu">
