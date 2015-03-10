@@ -39,8 +39,8 @@ public class SignUpActivity extends Activity {
     private Button signUp;
     private EditText name, email, password, mobNo;
     private TextView errorName, errorEmail, errorPassword, errorMobileNo, login;
-
-    private Boolean isInternetPresent = false;
+    Boolean isInternetPresent = false;
+    ConnectionDetector cd;
     private JSONParser jParser;
     JSONArray jsonArray = null;
     public static final String PREFS_NAME = "RegisterPrefs";
@@ -65,16 +65,22 @@ public class SignUpActivity extends Activity {
         errorPassword = (TextView) findViewById(R.id.password_error);
         errorMobileNo = (TextView) findViewById(R.id.mob_no_error);
 
-//        login = (TextView) findViewById(R.id.login_here);
+
 
         signUp = (Button) findViewById(R.id.sign_up);
+
+        cd = new ConnectionDetector(getApplicationContext());
+        isInternetPresent = cd.isConnectingToInternet();
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ConnectionDetector connectionDetector = new ConnectionDetector(getBaseContext());
                 if (isValidUserInfo()) {
-                    new MTRegistration().execute();
+                    if (isInternetPresent) {
+                        new MTRegistration().execute();
+                    }else{
+                        Toast.makeText(getBaseContext(), "You don't have internet connection", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -82,8 +88,9 @@ public class SignUpActivity extends Activity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(SignUpActivity.this, SignInActivity.class);
+                Intent i = new Intent(SignUpActivity.this, ValidateUserActivity.class);
                 startActivity(i);
+                finish();
             }
         });
 
@@ -274,4 +281,23 @@ public class SignUpActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public String GetCountryZipCode(){
+        String CountryID="";
+        String CountryZipCode="";
+
+        TelephonyManager manager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        //getNetworkCountryIso
+        CountryID= manager.getSimCountryIso().toUpperCase();
+        String[] rl=this.getResources().getStringArray(R.array.CountryCodes);
+        for(int i=0;i<rl.length;i++){
+            String[] g=rl[i].split(",");
+            if(g[1].trim().equals(CountryID.trim())){
+                CountryZipCode=g[0];
+                break;
+            }
+        }
+        return CountryZipCode;
+    }
+
 }

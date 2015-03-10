@@ -36,7 +36,7 @@ public class SignInActivity extends Activity {
     EditText uEmail, uPassword;
     ArrayList<SignUpModel> userList;
     TextView Ok;
-    Boolean isInternetPresent;
+    Boolean isInternetPresent = false;
     ConnectionDetector cd;
 
     private JSONParser jParser;
@@ -64,10 +64,10 @@ public class SignInActivity extends Activity {
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new MTLogin().execute();
                 if (isInternetPresent) {
                     new MTLogin().execute();
                 } else {
+
                     // create an object that contains data for a document
                     /*
                     Map<String, Object> docContent = new HashMap<String, Object>();
@@ -94,7 +94,8 @@ public class SignInActivity extends Activity {
                     // display the retrieved document
                     Log.d(TAG,"retrievedDocument="+ String.valueOf(retrievedDocument.getProperties()));
                     */
-                    Toast.makeText(getBaseContext(), " Internet Connection Failed", Toast.LENGTH_SHORT).show();
+
+                    Toast.makeText(getBaseContext(), "You don't have internet connection", Toast.LENGTH_SHORT).show();
                 }
 
 			/*

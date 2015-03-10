@@ -30,16 +30,6 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        android:text="@string/create_acc"
-        android:textSize="16sp" />
-
     <EditText
         android:id="@+id/name"
         android:layout_width="230dp"
@@ -49,7 +39,7 @@
         android:layout_marginTop="20dp"
         android:hint="@string/name"
         android:inputType="textPersonName"
-        android:layout_below="@+id/text"
+        android:layout_below="@id/linearLayout"
         android:layout_alignLeft="@+id/password"
         android:layout_alignStart="@+id/password">
     <requestFocus />
@@ -160,8 +150,8 @@
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:drawableRight="@drawable/arrow_sign_in"
-        android:drawableEnd="@drawable/arrow_sign_in"
+        android:drawableRight="@drawable/arrow_sign_up"
+        android:drawableEnd="@drawable/arrow_sign_up"
         android:paddingRight="60dp"
         android:paddingLeft="60dp"
         android:background="#4bada5"

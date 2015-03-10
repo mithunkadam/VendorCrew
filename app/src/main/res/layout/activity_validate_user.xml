@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#4CAEA6"
+        android:gravity="center"
+        android:paddingTop="20dp"
+        android:paddingBottom="10dp"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:background="@drawable/logo" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/logo"
+            android:textColor="#ffffff"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="@string/user_validation" />
+
+    <EditText
+        android:id="@+id/valid_password"
+        android:layout_width="230dp"
+        android:layout_height="40dp"
+        android:paddingLeft="10dp"
+        android:textSize="14sp"
+        android:layout_marginTop="20dp"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true" >
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/password_error_msg"
+        android:layout_width="230dp"
+        android:layout_height="40dp"
+        android:paddingLeft="10dp"
+        android:layout_below="@id/valid_password"
+        android:layout_alignLeft="@id/valid_password"
+        android:layout_alignRight="@id/valid_password"
+        android:contentDescription="@null"
+        android:textSize="12sp"
+        android:textColor="#ee0000"
+        android:text="@string/name_error"
+        android:visibility="gone"/>
+
+    <EditText
+        android:id="@+id/valid_pin"
+        android:layout_width="230dp"
+        android:layout_height="40dp"
+        android:paddingLeft="10dp"
+        android:textSize="14sp"
+        android:layout_alignLeft="@+id/valid_password"
+        android:layout_below="@+id/valid_password"
+        android:layout_marginTop="20dp"
+        android:hint="pin"
+        android:inputType="numberPassword" >
+    </EditText>
+
+    <TextView
+        android:id="@+id/pin_error_msg"
+        android:layout_width="230dp"
+        android:layout_height="40dp"
+        android:paddingLeft="10dp"
+        android:layout_below="@id/valid_pin"
+        android:layout_alignLeft="@id/valid_pin"
+        android:layout_alignRight="@id/valid_pin"
+        android:contentDescription="@null"
+        android:textSize="12sp"
+        android:textColor="#ee0000"
+        android:text="@string/Validate_pin_error"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/continue_btn"
+        android:layout_width="280dp"
+        android:layout_height="40dp"
+        android:text="@string/validate"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:paddingRight="60dp"
+        android:paddingLeft="60dp"
+        android:background="#4bada5"
+        android:layout_below="@id/valid_pin"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"/>
+
+</RelativeLayout>

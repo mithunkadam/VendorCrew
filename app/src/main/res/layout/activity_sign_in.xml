@@ -31,7 +31,6 @@
     </LinearLayout>
 
     <Button
-
         android:id="@+id/sign_up"
         android:layout_width="280dp"
         android:layout_height="40dp"
@@ -40,8 +39,8 @@
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:drawableRight="@drawable/arrow_sign_in"
-        android:drawableEnd="@drawable/arrow_sign_in"
+        android:drawableRight="@drawable/arrow_sign_up"
+        android:drawableEnd="@drawable/arrow_sign_up"
         android:paddingRight="60dp"
         android:paddingLeft="60dp"
         android:background="#4bada5"
