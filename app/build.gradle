@@ -31,4 +31,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.couchbase.lite:couchbase-lite-android:0.0.0-463'
+    compile 'com.getbase:floatingactionbutton:1.8.0'
 }

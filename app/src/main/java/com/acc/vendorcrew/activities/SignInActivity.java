@@ -45,7 +45,7 @@ public class SignInActivity extends Activity {
     /*private Manager manager;
     Database database;*/
     // create a name for the database and make sure the name is legal
-    String dbname = "cms_login";
+//    String dbname = "cms_login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

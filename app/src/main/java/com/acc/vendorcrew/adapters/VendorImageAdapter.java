@@ -1,16 +1,23 @@
 package com.acc.vendorcrew.adapters;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.acc.vendorcrew.R;
+import com.acc.vendorcrew.model.CategoriesModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Sagar on 3/2/2015.
@@ -25,6 +32,7 @@ public class VendorImageAdapter extends BaseAdapter {
         this.imageid = Imageid;
         this.web = web;
     }
+
 
     @Override
     public int getCount() {
@@ -44,6 +52,7 @@ public class VendorImageAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View grid;
+
         LayoutInflater inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {

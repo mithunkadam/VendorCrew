@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.provider.Settings;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.telephony.TelephonyManager;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,34 +23,56 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.acc.vendorcrew.R;
+import com.acc.vendorcrew.Vendor;
 import com.acc.vendorcrew.connectivity.ConnectionDetector;
 import com.acc.vendorcrew.constant.Constant;
+import com.acc.vendorcrew.document.User;
 import com.acc.vendorcrew.json.JSONParser;
+import com.couchbase.lite.CouchbaseLiteException;
+import com.couchbase.lite.Database;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SignUpActivity extends Activity {
 
+    private String TAG = "Response";
     private Button signUp;
     private EditText name, email, password, mobNo;
     private TextView errorName, errorEmail, errorPassword, errorMobileNo, login;
+
+    Context mContext;
 
     private Boolean isInternetPresent = false;
     private JSONParser jParser;
     JSONArray jsonArray = null;
     public static final String PREFS_NAME = "RegisterPrefs";
 
+    private Database getDatabase() {
+        Vendor vendor = (Vendor) getApplication();
+        return vendor.getDatabase();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+        mContext = this;
 
         SpannableString str = new SpannableString("Login Here");
         str.setSpan(new UnderlineSpan(), 0, str.length(), Spanned.SPAN_PARAGRAPH);
@@ -169,6 +193,7 @@ public class SignUpActivity extends Activity {
     class MTRegistration extends AsyncTask<String, String, ArrayList<Object>> {
 
         ProgressDialog pDialog;
+
         String response;
         String is_logged;
         String username;
@@ -185,6 +210,7 @@ public class SignUpActivity extends Activity {
             pDialog.setCancelable(false);
             pDialog.show();
 
+            String uName = name.getText().toString();
             String uEmail = email.getText().toString();
             String uPassword = password.getText().toString();
             String uMobNo = mobNo.getText().toString();
@@ -215,17 +241,30 @@ public class SignUpActivity extends Activity {
         @Override
         protected void onPostExecute(ArrayList<Object> result) {
 
+            String uName = name.getText().toString();
+            String uEmail = email.getText().toString();
+            String uContact = mobNo.getText().toString();
+            String uPass = password.getText().toString();
+
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            Calendar calendar = GregorianCalendar.getInstance();
+            String updateTime = dateFormatter.format(calendar.getTime());
+
             String StatusCode = result.get(1).toString();
             System.out.println("Response in registration" + StatusCode);
+
 
             try {
 
                 JSONObject jsnObject = (JSONObject) result.get(0);
 
+
                 if (StatusCode.equals("201")) {
                     String registrationID = null;
                     try {
                         registrationID = jsnObject.getString(Constant.REGISTRATION_ID);
+                        User.createUser(getDatabase(), uEmail, uName, uPass, uContact, registrationID, updateTime);
+                        Log.e( TAG, registrationID);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -234,8 +273,10 @@ public class SignUpActivity extends Activity {
                     editor.putString("registeredUser", registrationID);
                     editor.commit();
 
+
                     Intent intent = new Intent(SignUpActivity.this, AddVendorCategoryActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
                     startActivity(intent);
                     finish();
                 } else {
@@ -247,6 +288,8 @@ public class SignUpActivity extends Activity {
                 }
 
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (CouchbaseLiteException e) {
                 e.printStackTrace();
             }
             pDialog.dismiss();
@@ -274,4 +317,5 @@ public class SignUpActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
