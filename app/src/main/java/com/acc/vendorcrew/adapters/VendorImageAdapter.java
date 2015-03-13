@@ -22,27 +22,39 @@ import java.util.List;
 /**
  * Created by Sagar on 3/2/2015.
  */
-public class VendorImageAdapter extends BaseAdapter {
+public class VendorImageAdapter extends ArrayAdapter<CategoriesModel> {
     private Context mContext;
-    private final String[] web;
+    private List<CategoriesModel> categoriesModels;
     private final int[] imageid;
+
+    public VendorImageAdapter(Context context, List<CategoriesModel> cm , int[] imageId) {
+        super(context, 0 , cm);
+        this.mContext = context;
+        this.categoriesModels = cm;
+        this.imageid = imageId;
+    }
+/*
+    private final String[] web;
 
     public VendorImageAdapter(Context context, String[] web, int[] Imageid) {
         mContext = context;
         this.imageid = Imageid;
         this.web = web;
     }
+*/
 
 
+/*
     @Override
     public int getCount() {
-        return web.length;
+        return 0;
     }
 
     @Override
     public Object getItem(int position) {
         return null;
     }
+*/
 
     @Override
     public long getItemId(int position) {
@@ -52,6 +64,8 @@ public class VendorImageAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View grid;
+
+        CategoriesModel categories = this.categoriesModels.get(position);
 
         LayoutInflater inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -63,8 +77,8 @@ public class VendorImageAdapter extends BaseAdapter {
 
             Typeface custom_font = Typeface.createFromAsset(mContext.getAssets() , "font/ProximaNova-Reg.ttf");
             textView.setTypeface(custom_font);
-            textView.setText(web[position]);
-            imageView.setImageResource(imageid[position]);
+            textView.setText(categories.getName());
+//            imageView.setImageResource(imageid[position]);
         } else {
             grid = (View) convertView;
         }
