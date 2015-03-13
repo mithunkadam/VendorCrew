@@ -7,6 +7,7 @@ public class Constant {
     public static final String REGISTRATION_URL = "http://app.connectzap.com:3000/users/register?";
     public static final String LOGIN_URL = "http://app.connectzap.com:3000/users/login?";
     public static final String VALIDATE_URL = "http://app.connectzap.com:3000/users/validatepin?";
+    public static final String CATEGORIES_URL = "http://app.connectzap.com:3000/categories?";
 
     //************************* for Registration **************************
 

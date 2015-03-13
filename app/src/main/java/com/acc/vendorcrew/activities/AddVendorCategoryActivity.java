@@ -16,25 +16,36 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.acc.vendorcrew.R;
 import com.acc.vendorcrew.adapters.VendorImageAdapter;
+import com.acc.vendorcrew.constant.Constant;
 import com.acc.vendorcrew.json.JSONParser;
 import com.acc.vendorcrew.model.CategoriesModel;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 
 public class AddVendorCategoryActivity extends Activity {
 
-    JSONParser jParser;
     private Context mContext;
     TextView browse;
     GridView gridView;
+
 
     String[] web = {
             "Electronics",
@@ -45,7 +56,39 @@ public class AddVendorCategoryActivity extends Activity {
             "Banks",
             "Mobiles",
             "Computers",
-            "Others"
+            "Others",
+            "Air Conditioning",
+            "Broadband Services",
+            "Colleges",
+            "Consumer Goods",
+            "Credit Cards",
+            "Dry Cleaning",
+            "Fast Food",
+            "Fitness & Gym",
+            "Florist",
+            "Furniture",
+            "Hospitals",
+            "Insurance",
+            "Magazines & Periodicals",
+            "Mobile Shoppee",
+            "Newspaper",
+            "PUC",
+            "Pastries",
+            "Personal Care",
+            "Plumbing & Electricals",
+            "Retail",
+            "Schools",
+            "Service Station 2W",
+            "Service Station 4W",
+            "Sports Center",
+            "Stationary, Gift & Articles",
+            "Stock Trading",
+            "Taxi & Radio Cabs",
+            "Transport - Air",
+            "Transport - Bus",
+            "Transport - Rail",
+            "Utilities - Others",
+            "Utilities - Power"
     };
 
     int[] imageId = {
@@ -57,7 +100,40 @@ public class AddVendorCategoryActivity extends Activity {
             R.drawable.banks,
             R.drawable.mobiles,
             R.drawable.computers,
-            R.drawable.other
+            R.drawable.other,
+            R.drawable.electonics,
+            R.drawable.telecom,
+            R.drawable.finance,
+            R.drawable.medical,
+            R.drawable.groceries,
+            R.drawable.banks,
+            R.drawable.mobiles,
+            R.drawable.computers,
+            R.drawable.other,
+            R.drawable.electonics,
+            R.drawable.telecom,
+            R.drawable.finance,
+            R.drawable.medical,
+            R.drawable.groceries,
+            R.drawable.banks,
+            R.drawable.mobiles,
+            R.drawable.computers,
+            R.drawable.other,
+            R.drawable.electonics,
+            R.drawable.telecom,
+            R.drawable.finance,
+            R.drawable.medical,
+            R.drawable.groceries,
+            R.drawable.banks,
+            R.drawable.mobiles,
+            R.drawable.computers,
+            R.drawable.other,
+            R.drawable.electonics,
+            R.drawable.telecom,
+            R.drawable.finance,
+            R.drawable.medical,
+            R.drawable.groceries,
+            R.drawable.banks
     };
 
     @Override
@@ -93,12 +169,10 @@ public class AddVendorCategoryActivity extends Activity {
         Typeface custom_font = Typeface.createFromAsset(getAssets(), "font/ProximaNova-Bold.ttf");
         browse.setTypeface(custom_font);
         gridView = (GridView) findViewById(R.id.gridview);
-
-        new GetData().execute();
-
-//        gridView.setAdapter(new VendorImageAdapter(this, web, imageId));
-
-  /*      gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gridView.setAdapter(new VendorImageAdapter(this , web , imageId));
+//        new GetData().execute();
+//        gridView.setAdapter(new VendorImageAdapter(mContext, new ArrayList<CategoriesModel>(), imageId));
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(mContext, AddBrandsActivity.class);
@@ -107,7 +181,7 @@ public class AddVendorCategoryActivity extends Activity {
                 startActivity(i);
             }
         });
-*/
+
     }
 
 
@@ -132,62 +206,49 @@ public class AddVendorCategoryActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+/*
+    class GetData extends AsyncTask<String, Void, ArrayList<Object>> {
+        JSONObject json = null;
+        String str = "";
+        HttpResponse response;
 
-
-    class GetData extends AsyncTask<String, String, ArrayList<Object>> {
-        ProgressDialog dialog;
-        String callUrl;
-        CategoriesModel c;
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+        protected void onPostExecute(ArrayList<Object> objects) {
+            super.onPostExecute(objects);
 
-            callUrl = "http://app.connectzap.com:3000/categories";
-        }
-
-        @Override
-        protected ArrayList<Object> doInBackground(String... arg0) {
-            jParser = new JSONParser();
-
-            ArrayList<Object> jsonObject = jParser.getJSONFromUrl(callUrl);
-
-            return jsonObject;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Object> result) {
 
             try {
-                JSONObject jsnObject;
-                for (int i = 0; i < result.size(); i++) {
-                    try {
-                        jsnObject = (JSONObject) result.get(i);
-                        c.set_id(jsnObject.getString("_id"));
-                        c.setName(jsnObject.getString("name"));
-                        c.setCategoryId(jsnObject.getInt("categoryid"));
-                        c.setImagePath(jsnObject.getString("imagepath"));
+                JSONArray jArray = new JSONArray(str);
+                json = jArray.getJSONObject(0);
 
-                        gridView.setAdapter(new VendorImageAdapter(mContext, new ArrayList<CategoriesModel>(), imageId));
-                        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                Intent i = new Intent(mContext, AddBrandsActivity.class);
-                                i.putExtra("VENDOR_NAME", web[position]);
-                                i.putExtra("RESOURCE_ID", position);
-                                startActivity(i);
-                            }
-                        });
+                CategoriesModel c = new CategoriesModel();
+                c.set_id(json.getString("_id"));
+                c.setName(json.getString("name"));
+                c.setCategoryId(json.getInt("categoryid"));
+                c.setImagePath(json.getString("imagepath"));
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            } catch (Exception e) {
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-    }
 
+        @Override
+        protected ArrayList<Object> doInBackground(String... params) {
+
+            HttpClient myClient = new DefaultHttpClient();
+            HttpGet myConnection = new HttpGet(Constant.CATEGORIES_URL);
+
+            try {
+                response = myClient.execute(myConnection);
+                str = EntityUtils.toString(response.getEntity(), "UTF-8");
+
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }*/
 }

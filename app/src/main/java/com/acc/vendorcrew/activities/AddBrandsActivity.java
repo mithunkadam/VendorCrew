@@ -29,6 +29,7 @@ public class AddBrandsActivity extends Activity {
     private Context mContext;
 
     final int imageList[]={
+
             R.drawable.electonics,
             R.drawable.telecom,
             R.drawable.finance,
@@ -37,7 +38,41 @@ public class AddBrandsActivity extends Activity {
             R.drawable.banks,
             R.drawable.mobiles,
             R.drawable.computers,
-            R.drawable.other};
+            R.drawable.other,
+            R.drawable.electonics,
+            R.drawable.telecom,
+            R.drawable.finance,
+            R.drawable.medical,
+            R.drawable.groceries,
+            R.drawable.banks,
+            R.drawable.mobiles,
+            R.drawable.computers,
+            R.drawable.other,
+            R.drawable.electonics,
+            R.drawable.telecom,
+            R.drawable.finance,
+            R.drawable.medical,
+            R.drawable.groceries,
+            R.drawable.banks,
+            R.drawable.mobiles,
+            R.drawable.computers,
+            R.drawable.other,
+            R.drawable.electonics,
+            R.drawable.telecom,
+            R.drawable.finance,
+            R.drawable.medical,
+            R.drawable.groceries,
+            R.drawable.banks,
+            R.drawable.mobiles,
+            R.drawable.computers,
+            R.drawable.other,
+            R.drawable.electonics,
+            R.drawable.telecom,
+            R.drawable.finance,
+            R.drawable.medical,
+            R.drawable.groceries,
+            R.drawable.banks
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
