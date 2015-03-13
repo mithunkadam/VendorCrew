@@ -37,6 +37,15 @@ public class AddBrandsActivity extends Activity {
             R.drawable.banks,
             R.drawable.mobiles,
             R.drawable.computers,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
             R.drawable.other};
     @Override
     protected void onCreate(Bundle savedInstanceState) {

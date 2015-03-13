@@ -6,28 +6,28 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.acc.vendorcrew.R;
 import com.acc.vendorcrew.adapters.VendorImageAdapter;
+import com.acc.vendorcrew.json.JSONParser;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 
 
 public class AddVendorCategoryActivity extends Activity {
 
+    JSONParser jParser;
     private Context mContext;
     TextView browse;
+    GridView gridView;
+
     String[] web = {
             "Electronics",
             "Telecom",
@@ -37,7 +37,17 @@ public class AddVendorCategoryActivity extends Activity {
             "Banks",
             "Mobiles",
             "Computers",
+            "Others",
+            "Others",
+            "Others",
+            "Others",
+            "Others",
+            "Others",
+            "Others",
+            "Others",
+            "Others",
             "Others"
+
     };
 
     int[] imageId = {
@@ -49,6 +59,15 @@ public class AddVendorCategoryActivity extends Activity {
             R.drawable.banks,
             R.drawable.mobiles,
             R.drawable.computers,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
             R.drawable.other
     };
     @Override
@@ -73,11 +92,20 @@ public class AddVendorCategoryActivity extends Activity {
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
 
+        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.setter);
+//        button.setSize(FloatingActionButton.SIZE_MINI);
+        button.setColorNormalResId(R.color.red);
+        button.setColorPressedResId(R.color.red_pressed);
+        button.setIcon(R.drawable.ic_add186);
+        button.setStrokeVisible(false);
+
         browse = (TextView) findViewById(R.id.category_id);
         Typeface custom_font = Typeface.createFromAsset(getAssets() , "font/ProximaNova-Bold.ttf");
         browse.setTypeface(custom_font);
-        GridView gridView = (GridView) findViewById(R.id.gridview);
+        gridView = (GridView) findViewById(R.id.gridview);
+
         gridView.setAdapter(new VendorImageAdapter(this , web , imageId));
+
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -87,6 +115,7 @@ public class AddVendorCategoryActivity extends Activity {
                 startActivity(i);
             }
         });
+
     }
 
 
@@ -111,4 +140,62 @@ public class AddVendorCategoryActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
-}
+
+/*
+    class GetData extends AsyncTask<String , String , ArrayList<Object>>{
+        ProgressDialog dialog;
+        String callUrl;
+        CategoriesModel c;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            callUrl = "app.connectzap.com:3000/categories";
+        }
+
+        @Override
+        protected ArrayList<Object> doInBackground(String... arg0) {
+            jParser = new JSONParser();
+
+            ArrayList<Object> jsonObject = jParser.getJSONFromUrl(callUrl);
+
+            return jsonObject;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Object> result) {
+
+            try{
+                JSONObject jsnObject ;
+                for (int i=0; i < result.size(); i++){
+                    try{
+                        jsnObject = (JSONObject) result.get(i);
+                        c.set_id(jsnObject.getString("_id"));
+                        c.setName(jsnObject.getString("name"));
+                        c.setCategoryId(jsnObject.getInt("categoryid"));
+                        c.setImagePath(jsnObject.getString("imagepath"));
+
+                        gridView.setAdapter(new VendorImageAdapter(mContext , new ArrayList<CategoriesModel>() , imageId));
+                        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                Intent i = new Intent(mContext, AddBrandsActivity.class);
+                                i.putExtra("VENDOR_NAME" , web[position]);
+                                i.putExtra("RESOURCE_ID",position);
+                                startActivity(i);
+                            }
+                        });
+
+                    }catch (JSONException e){
+                        e.printStackTrace();
+                    }
+                }
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+*/
+    }
+

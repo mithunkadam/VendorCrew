@@ -5,13 +5,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
-import android.provider.Settings;
 import android.os.Bundle;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.TelephonyManager;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,38 +23,53 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.acc.vendorcrew.R;
+import com.acc.vendorcrew.Vendor;
 import com.acc.vendorcrew.connectivity.ConnectionDetector;
 import com.acc.vendorcrew.constant.Constant;
+import com.acc.vendorcrew.document.User;
 import com.acc.vendorcrew.json.JSONParser;
+import com.couchbase.lite.CouchbaseLiteException;
+import com.couchbase.lite.Database;
 
-import org.apache.http.client.methods.HttpPost;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SignUpActivity extends Activity {
 
+    private String TAG = "Response";
     private Button signUp;
     private EditText name, email, password, mobNo;
-    private TextView errorName, errorEmail, errorPassword, errorMobileNo, login;
+    private TextView errorName, errorEmail, errorPassword, errorMobileNo, login, register_user, header_text, bottom_text;
+
+    private Context mContext = this;
+
     Boolean isInternetPresent = false;
     ConnectionDetector cd;
-    private JSONParser jParser;
-    JSONArray jsonArray = null;
     public static final String PREFS_NAME = "RegisterPrefs";
 
+    private Database getDatabase() {
+        Vendor vendor = (Vendor) getApplication();
+        return vendor.getDatabase();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        Typeface custom_font_regular = Typeface.createFromAsset(getAssets() , "font/ProximaNova-Bold.ttf");
+        Typeface custom_font_bold = Typeface.createFromAsset(getAssets() , "font/ProximaNova-Reg.ttf");
+
         SpannableString str = new SpannableString("Login Here");
         str.setSpan(new UnderlineSpan(), 0, str.length(), Spanned.SPAN_PARAGRAPH);
         login = (TextView) findViewById(R.id.login_here);
+        login.setTypeface(custom_font_bold);
         login.setText(str);
 
         name = (EditText) findViewById(R.id.name);
@@ -60,14 +77,34 @@ public class SignUpActivity extends Activity {
         password = (EditText) findViewById(R.id.password);
         mobNo = (EditText) findViewById(R.id.mob_no);
 
+        mobNo.setText(GetCountryZipCode()+" ");
+        mobNo.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+
+
+        name.setTypeface(custom_font_regular);
+        email.setTypeface(custom_font_regular);
+        password.setTypeface(custom_font_regular);
+        mobNo.setTypeface(custom_font_regular);
+
         errorName = (TextView) findViewById(R.id.name_error);
         errorEmail = (TextView) findViewById(R.id.email_error);
         errorPassword = (TextView) findViewById(R.id.password_error);
         errorMobileNo = (TextView) findViewById(R.id.mob_no_error);
+        register_user = (TextView) findViewById(R.id.register_user);
+        header_text = (TextView) findViewById(R.id.header_text);
+        bottom_text = (TextView) findViewById(R.id.bottom_text);
 
 
+        errorName.setTypeface(custom_font_regular);
+        errorEmail.setTypeface(custom_font_regular);
+        errorPassword.setTypeface(custom_font_regular);
+        errorMobileNo.setTypeface(custom_font_regular);
+        register_user.setTypeface(custom_font_regular);
+        header_text.setTypeface(custom_font_regular);
+        bottom_text.setTypeface(custom_font_regular);
 
         signUp = (Button) findViewById(R.id.sign_up);
+        signUp.setTypeface(custom_font_bold);
 
         cd = new ConnectionDetector(getApplicationContext());
         isInternetPresent = cd.isConnectingToInternet();
@@ -75,11 +112,18 @@ public class SignUpActivity extends Activity {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isValidUserInfo()) {
-                    if (isInternetPresent) {
-                        new MTRegistration().execute();
-                    }else{
-                        Toast.makeText(getBaseContext(), "You don't have internet connection", Toast.LENGTH_SHORT).show();
+                if (isValidName()) {
+                    if(isValidEmail()){
+                        if(isValidPassword()){
+                            if(isValidMobNo()){
+                                if (isInternetPresent) {
+                                    new MTRegistration().execute();
+                                }else{
+                                    Toast.makeText(getBaseContext(), "You don't have internet connection", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+
                     }
                 }
             }
@@ -88,65 +132,59 @@ public class SignUpActivity extends Activity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(SignUpActivity.this, ValidateUserActivity.class);
+                Intent i = new Intent(SignUpActivity.this, SignInActivity.class);
                 startActivity(i);
                 finish();
             }
         });
-
     }
 
-    private boolean isValidUserInfo(){
-        boolean bname, bemail, bpassword, bmobno;
+    private boolean isValidName() {
         final String uName = name.getText().toString();
         if (!isValidName(uName)) {
             errorName.setVisibility(View.VISIBLE);
-            bname = false;
-        }else {
+            return false;
+        } else {
             errorName.setVisibility(View.GONE);
-            bname = true;
+            return true;
         }
+    }
 
+    private boolean isValidEmail() {
         final String uEmail = email.getText().toString();
         if (!isValidEmail(uEmail)) {
             errorEmail.setVisibility(View.VISIBLE);
-            bemail = false;
-        }else {
+            return false;
+        } else {
             errorEmail.setVisibility(View.GONE);
-            bemail = true;
+            return true;
         }
+    }
 
+    private boolean isValidPassword() {
         final String uPassword = password.getText().toString();
         if (!isValidPassword(uPassword)) {
             errorPassword.setVisibility(View.VISIBLE);
-            bpassword = false;
-        }else {
+            return false;
+        } else {
             errorPassword.setVisibility(View.GONE);
-            bpassword = true;
+            return true;
         }
+    }
 
+    private boolean isValidMobNo() {
         final String uMobNo = mobNo.getText().toString();
         if (!isValidMobNo(uMobNo)) {
             errorMobileNo.setVisibility(View.VISIBLE);
-            bmobno = false;
-        }else {
-            errorMobileNo.setVisibility(View.GONE);
-            bmobno = true;
-        }
-
-        if(bname && bemail && bpassword && bmobno){
-            return true;
-        }else {
             return false;
+        } else {
+            errorMobileNo.setVisibility(View.GONE);
+            return true;
         }
     }
 
     private boolean isValidName(String uName) {
-        if(uName.equals("")){
-            return false;
-        }else {
-            return true;
-        }
+        return !uName.equals("");
     }
 
     private boolean isValidEmail(String uEmail) {
@@ -157,30 +195,16 @@ public class SignUpActivity extends Activity {
     }
 
     private boolean isValidPassword(String uPassword) {
-        if(uPassword.length()<7){
-            return false;
-        }else{
-            return true;
-        }
+        return uPassword.length() >= 7;
     }
 
     private boolean isValidMobNo(String uMobNo) {
-        if(uMobNo.equals("") || uMobNo.length()<12){
-            return false;
-        }else{
-            return true;
-        }
+        return !(uMobNo.equals("") || uMobNo.length() != 12);
     }
-
 
     class MTRegistration extends AsyncTask<String, String, ArrayList<Object>> {
 
         ProgressDialog pDialog;
-        String response;
-        String is_logged;
-        String username;
-        String code;
-
         String webAddressToPost;
 
         @Override
@@ -205,13 +229,13 @@ public class SignUpActivity extends Activity {
                     + Constant.REGISTRATION_MOBILE_NUMBER + uMobNo + "&"
                     + Constant.REGISTRATION_DEVICE_ID + m_deviceId;
 
-            System.out.println("Response in onPreExecute " + webAddressToPost);
+            System.out.println("Response in onPreExecute" + webAddressToPost);
         }
 
         @Override
         protected ArrayList<Object> doInBackground(String... arg0) {
 
-            jParser = new JSONParser();
+            JSONParser jParser = new JSONParser();
             ArrayList<Object> jsnObject = jParser.getJSONFromUrl(webAddressToPost);
 
             System.out.println("Response in doInBackground " + jsnObject);
@@ -222,17 +246,27 @@ public class SignUpActivity extends Activity {
         @Override
         protected void onPostExecute(ArrayList<Object> result) {
 
+            String uName = name.getText().toString();
+            String uEmail = email.getText().toString();
+            String uContact = mobNo.getText().toString();
+            String uPass = password.getText().toString();
+
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            Calendar calendar = GregorianCalendar.getInstance();
+            String updateTime = dateFormatter.format(calendar.getTime());
+
             String StatusCode = result.get(1).toString();
             System.out.println("Response in registration" + StatusCode);
 
             try {
-
                 JSONObject jsnObject = (JSONObject) result.get(0);
 
                 if (StatusCode.equals("201")) {
                     String registrationID = null;
                     try {
                         registrationID = jsnObject.getString(Constant.REGISTRATION_ID);
+                        User.createUser(getDatabase(), uEmail, uName, uPass, uContact, registrationID, updateTime);
+                        Log.e( TAG, registrationID);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -241,7 +275,8 @@ public class SignUpActivity extends Activity {
                     editor.putString("registeredUser", registrationID);
                     editor.commit();
 
-                    Intent intent = new Intent(SignUpActivity.this, AddVendorCategoryActivity.class);
+
+                    Intent intent = new Intent(SignUpActivity.this, ValidateUserActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
@@ -254,6 +289,8 @@ public class SignUpActivity extends Activity {
                 }
 
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (CouchbaseLiteException e) {
                 e.printStackTrace();
             }
             pDialog.dismiss();
@@ -290,14 +327,14 @@ public class SignUpActivity extends Activity {
         //getNetworkCountryIso
         CountryID= manager.getSimCountryIso().toUpperCase();
         String[] rl=this.getResources().getStringArray(R.array.CountryCodes);
-        for(int i=0;i<rl.length;i++){
-            String[] g=rl[i].split(",");
-            if(g[1].trim().equals(CountryID.trim())){
-                CountryZipCode=g[0];
+        for (int i = 0; i < rl.length; i++) {
+            String aRl = rl[i];
+            String[] g = aRl.split(",");
+            if (g[1].trim().equals(CountryID.trim())) {
+                CountryZipCode = g[0];
                 break;
             }
         }
         return CountryZipCode;
     }
-
 }

@@ -8,7 +8,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#4CAEA6"
+        android:background="@drawable/header_background"
         android:gravity="center"
         android:paddingTop="20dp"
         android:paddingBottom="10dp"
@@ -27,7 +27,7 @@
             android:text="@string/logo"
             android:textColor="#ffffff"
             android:textSize="12sp"
-            android:textStyle="bold" />
+            android:fontFamily="ProximaNova-Bold" />
     </LinearLayout>
 
     <Button
@@ -38,65 +38,107 @@
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
-        android:textStyle="bold"
+        android:fontFamily="ProximaNova-Bold"
         android:drawableRight="@drawable/arrow_sign_up"
         android:drawableEnd="@drawable/arrow_sign_up"
         android:paddingRight="60dp"
         android:paddingLeft="60dp"
-        android:background="#4bada5"
+        android:background="@drawable/signup_button"
         android:layout_below="@+id/linearLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"/>
 
+    <View
+        android:id="@+id/line"
+        android:layout_width="110dp"
+        android:layout_height="2dp"
+        android:layout_below="@id/sign_up"
+        android:layout_marginTop="33dp"
+        android:layout_alignLeft="@+id/sign_up"
+        android:background="@android:color/darker_gray"/>
+
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/or"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/sign_up"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:gravity="center"
         android:text="@string/or"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="25sp"
-        android:textStyle="bold" />
+        android:textSize="24sp"
+        android:fontFamily="ProximaNova-Bold" />
 
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        android:text="@string/text"
-        android:textSize="16sp" />
+    <View
+        android:id="@+id/line2"
+        android:layout_width="110dp"
+        android:layout_height="2dp"
+        android:layout_below="@id/sign_up"
+        android:layout_marginTop="33dp"
+        android:layout_alignRight="@+id/sign_up"
+        android:background="@android:color/darker_gray"/>
+
 
     <EditText
         android:id="@+id/email"
-        android:layout_width="230dp"
+        android:layout_width="280dp"
         android:layout_height="40dp"
         android:paddingLeft="10dp"
         android:layout_marginTop="20dp"
         android:hint="@string/email_id"
         android:inputType="textEmailAddress"
-        android:layout_below="@+id/text"
+        android:layout_below="@+id/or"
+        android:textColor="@color/text_color"
         android:layout_alignLeft="@+id/password"
-        android:layout_alignStart="@+id/password">
+        android:layout_alignStart="@+id/password"
+        android:fontFamily="ProximaNova-Reg">
 
         <requestFocus />
     </EditText>
 
+    <TextView
+        android:id="@+id/email_error_msg"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:paddingLeft="10dp"
+        android:contentDescription="@null"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:fontFamily="ProximaNova-Reg"
+        android:textColor="@color/error_text_color"
+        android:background="@color/error_text_background_color"
+        android:text="@string/erroremail"
+        android:visibility="gone"/>
+
+
     <EditText
         android:id="@+id/password"
-        android:layout_width="230dp"
+        android:layout_width="280dp"
         android:layout_height="40dp"
         android:paddingLeft="10dp"
         android:layout_below="@+id/email"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:textColor="#242424"
+        android:textColor="@color/text_color"
         android:hint="@string/password"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:fontFamily="ProximaNova-Reg"/>
+
+    <TextView
+        android:id="@+id/password_error_msg"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:paddingLeft="10dp"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:background="@color/error_text_background_color"
+        android:contentDescription="@null"
+        android:textSize="12sp"
+        android:fontFamily="ProximaNova-Reg"
+        android:textColor="@color/error_text_color"
+        android:text="@string/errorpassword"
+        android:visibility="gone"/>
 
     <Button
 
@@ -106,16 +148,12 @@
         android:text="@string/login"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
-        android:textStyle="bold"
+        android:fontFamily="ProximaNova-Bold"
         android:textAllCaps="false"
-        android:background="#F9851D"
+        android:background="@drawable/login_button"
         android:layout_below="@+id/password"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:drawableRight="@drawable/arrow_sign_in"
-        android:drawableEnd="@drawable/arrow_sign_in"
-        android:paddingRight="60dp"
-        android:paddingLeft="60dp"/>
+        android:layout_marginTop="30dp"/>
 
     <TextView
         android:id="@+id/forget_pwd"
@@ -124,6 +162,8 @@
         android:layout_below="@+id/sign_in"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:text="@string/forget_pwd" />
+        android:background="@drawable/edittext_modified_states"
+        android:text="@string/forget_pwd"
+        android:fontFamily="ProximaNova-Reg"/>
 
 </RelativeLayout>

@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +19,6 @@ import com.acc.vendorcrew.connectivity.ConnectionDetector;
 import com.acc.vendorcrew.constant.Constant;
 import com.acc.vendorcrew.json.JSONParser;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,13 +26,12 @@ import java.util.ArrayList;
 
 public class ValidateUserActivity extends Activity {
 
-    public static final String PREFS_NAME = "RegisterdPrefs";
+    public static final String PREFS_NAME = "RegisteredPrefs";
     EditText uPassword, uPin;
     TextView errorPassword, errorPin;
     Button submit;
-    String password, pin, registerdUserID;
+    String password, pin, RegisteredPrefs;
     JSONParser jParser;
-    JSONArray jsonArray = null;
     boolean isInternetPresent = false;
     ConnectionDetector cd;
 
@@ -55,7 +52,7 @@ public class ValidateUserActivity extends Activity {
         pin = uPin.getText().toString();
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        registerdUserID = settings.getString("registeredUser", "");
+        RegisteredPrefs = settings.getString("registeredUser", "");
 
         cd = new ConnectionDetector(getApplicationContext());
         isInternetPresent = cd.isConnectingToInternet();
@@ -95,37 +92,20 @@ public class ValidateUserActivity extends Activity {
             errorPin.setVisibility(View.GONE);
             bpin = true;
         }
-        if(bpassword && bpin){
-            return true;
-        }else {
-            return false;
-        }
+        return bpassword && bpin;
     }
 
     private boolean isValidPassword(String uPassword) {
-        if(uPassword.equals("") || uPassword.length()<7){
-            return false;
-        }else{
-            return true;
-        }
+        return !(uPassword.equals("") || uPassword.length() < 7);
     }
 
     private boolean isValidPin(String uPin) {
-        if(uPin.equals("") || uPin.length()<6){
-            return false;
-        }else{
-            return true;
-        }
+        return !(uPin.equals("") || uPin.length() < 6);
     }
 
     class MTValidate extends AsyncTask<String, String, ArrayList<Object>> {
 
         ProgressDialog pDialog;
-        String response;
-        String is_logged;
-        String username;
-        String code;
-
         String webAddressToPost;
 
         @Override
@@ -138,7 +118,7 @@ public class ValidateUserActivity extends Activity {
             pDialog.show();
 
             webAddressToPost = Constant.VALIDATE_URL
-                    + Constant.VALIDATION_ACCOUNT_ID + registerdUserID + "&"
+                    + Constant.VALIDATION_ACCOUNT_ID + "54fe87009ddd86767e1a4173" + "&"
                     + Constant.VALIDATION_PASSWORD + uPassword.getText().toString() + "&"
                     + Constant.VALIDATE_PIN + uPin.getText().toString();
 
@@ -150,9 +130,7 @@ public class ValidateUserActivity extends Activity {
 
             jParser = new JSONParser();
 
-            ArrayList<Object> jsnObject = jParser.getJSONFromUrl(webAddressToPost);
-
-            return jsnObject;
+            return jParser.getJSONFromUrl(webAddressToPost);
         }
 
         @Override
@@ -182,7 +160,6 @@ public class ValidateUserActivity extends Activity {
 
                 }
             } catch (JSONException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 

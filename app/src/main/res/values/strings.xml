@@ -12,7 +12,7 @@
     <string name="cms_forgetpwd">Forget your password ?</string>
     <string name="title_activity_add_vendor_category">AddVendorCategoryActivity</string>
     <string name="title_activity_add_brands">AddBrandsActivity</string>
-    <string name="logo">As easiest way to connect with your service provider</string>
+    <string name="logo">Stay connected with your vendors and service providers!</string>
     <string name="sign_up">Sign Up</string>
     <string name="or">OR</string>
     <string name="text">Existing Users can login below</string>
@@ -34,6 +34,8 @@
     <string name="email_error">Please enter valid email id</string>
     <string name="password_error">Minimum 7 digit</string>
     <string name="mob_no_error">Minimum 12 digit with country code</string>
+    <string name="erroremail">Please enter your email address.</string>
+    <string name="errorpassword">Please enter your password.</string>
 
     <!-- Validate Screen-->
     <string name="user_validation">User Validation Form</string>
