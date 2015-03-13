@@ -49,7 +49,8 @@
             android:horizontalSpacing="15dp"
             android:numColumns="3"
             android:layout_marginTop="30dp"
-            android:verticalSpacing="15dp"/>
+            android:verticalSpacing="15dp"
+            android:listSelector="#f2f2f2"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/setter"

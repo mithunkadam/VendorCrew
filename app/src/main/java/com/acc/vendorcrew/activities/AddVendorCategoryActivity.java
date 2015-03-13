@@ -2,7 +2,6 @@ package com.acc.vendorcrew.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -42,6 +41,7 @@ import java.util.ArrayList;
 
 public class AddVendorCategoryActivity extends Activity {
 
+    JSONParser jParser;
     private Context mContext;
     TextView browse;
     GridView gridView;
@@ -152,7 +152,7 @@ public class AddVendorCategoryActivity extends Activity {
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
 //        ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton);
 
-        ImageView imageView1 = (ImageView) findViewById(R.id.imageView2);
+        ImageView imageView1 = (ImageView)findViewById(R.id.imageView2);
         imageView1.setBackgroundResource(R.drawable.browse);
 
         mActionBar.setCustomView(mCustomView);

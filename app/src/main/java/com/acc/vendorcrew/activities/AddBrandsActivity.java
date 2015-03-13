@@ -29,7 +29,6 @@ public class AddBrandsActivity extends Activity {
     private Context mContext;
 
     final int imageList[]={
-
             R.drawable.electonics,
             R.drawable.telecom,
             R.drawable.finance,

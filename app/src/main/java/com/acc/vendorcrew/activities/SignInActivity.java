@@ -3,14 +3,19 @@ package com.acc.vendorcrew.activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -25,19 +30,21 @@ import com.acc.vendorcrew.model.SignUpModel;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SignInActivity extends Activity {
+public class SignInActivity extends Activity implements Animation.AnimationListener {
 
     Button signUp, signIn;
     EditText uEmail, uPassword;
     ArrayList<SignUpModel> userList;
-    TextView Ok;
-    Boolean isInternetPresent;
+    private TextView errorEmail, errorPassword;
+    Boolean isInternetPresent = false;
     ConnectionDetector cd;
+    Animation animSlideUp, animSlideDown;
 
     private JSONParser jParser;
     JSONArray jsonArray = null;
@@ -52,56 +59,79 @@ public class SignInActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
+        Typeface custom_font_regular = Typeface.createFromAsset(getAssets() , "font/ProximaNova-Bold.ttf");
+        Typeface custom_font_bold = Typeface.createFromAsset(getAssets() , "font/ProximaNova-Reg.ttf");
+
         signUp = (Button) findViewById(R.id.sign_up);
         signIn = (Button) findViewById(R.id.sign_in);
+        signUp.setTypeface(custom_font_bold);
+        signIn.setTypeface(custom_font_bold);
 
         uEmail = (EditText) findViewById(R.id.email);
         uPassword = (EditText) findViewById(R.id.password);
 
+        errorEmail = (TextView) findViewById(R.id.email_error_msg);
+        errorPassword = (TextView) findViewById(R.id.password_error_msg);
+        errorEmail.setTypeface(custom_font_regular);
+        errorPassword.setTypeface(custom_font_regular);
+
+        animSlideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
+        animSlideUp.setAnimationListener(this);
+
+        animSlideDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down);
+        animSlideDown.setAnimationListener(this);
+
         cd = new ConnectionDetector(getApplicationContext());
         isInternetPresent = cd.isConnectingToInternet();
+
+        uEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                    isValidEmail();
+            }
+        });
+
+        uPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                isValidPassword();
+            }
+        });
 
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new MTLogin().execute();
-                if (isInternetPresent) {
-                    new MTLogin().execute();
-                } else {
-                    // create an object that contains data for a document
-                    /*
-                    Map<String, Object> docContent = new HashMap<String, Object>();
-                    docContent.put("LOGINID", email.getText().toString());
-                    docContent.put("PASSWORD", password.getText().toString());
-                    // display the data for the new document
-                    Log.d(TAG, "docContent=" + String.valueOf(docContent));
-                    // create an empty document
-                    Document document = database.createDocument();
-                    // add content to document and write the document to the
-                    // database
-                    try {
-                        document.putProperties(docContent);
-                        Log.d(TAG, "Document written to database named " + dbname
-                                + " with ID = " + document.getId());
-                    } catch (CouchbaseLiteException e) {
-                        Log.e(TAG, "Cannot write document to database", e);
+                if (isValidEmail()) {
+                    if (isValidPassword()) {
+                        if (isInternetPresent) {
+                            uEmail.setVisibility(View.GONE);
+                            uPassword.setVisibility(View.GONE);
+                            new MTLogin().execute();
+                        } else {
+                            Toast.makeText(getBaseContext(), "You don't have internet connection", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    // save the ID of the new document
-                    String docID = document.getId();
-
-                    // retrieve the document from the database
-                    Document retrievedDocument = database.getDocument(docID);
-                    // display the retrieved document
-                    Log.d(TAG,"retrievedDocument="+ String.valueOf(retrievedDocument.getProperties()));
-                    */
-                    Toast.makeText(getBaseContext(), " Internet Connection Failed", Toast.LENGTH_SHORT).show();
                 }
-
-			/*
-			 * Intent intent = new Intent(LoginActivity.this,
-			 * HomeActivity.class); startActivity(intent);
-			 */
-
             }
         });
 
@@ -115,12 +145,55 @@ public class SignInActivity extends Activity {
 
     }
 
+    private boolean isValidEmail() {
+        final String uemail = uEmail.getText().toString();
+        if (isValidEmail(uemail)) {
+            errorEmail.setVisibility(View.VISIBLE);
+            errorEmail.startAnimation(animSlideDown);
+            return false;
+        } else {
+            errorEmail.setVisibility(View.GONE);
+            return true;
+        }
+    }
+
+    private boolean isValidPassword() {
+        final String upassword = uPassword.getText().toString();
+        if (isValidPassword(upassword)) {
+            errorPassword.setVisibility(View.VISIBLE);
+            errorPassword.startAnimation(animSlideDown);
+            return false;
+        } else {
+            errorPassword.setVisibility(View.GONE);
+            return true;
+        }
+    }
+
+    private boolean isValidEmail(String uemail) {
+        return uemail.equals("");
+    }
+
+    private boolean isValidPassword(String upassword) {
+        return upassword.equals("");
+    }
+
     @Override
     protected void onResume() {
-        // TODO Auto-generated method stub
         super.onResume();
-        uEmail.setText("");
-        uPassword.setText("");
+    }
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
 
     }
 
@@ -128,14 +201,6 @@ public class SignInActivity extends Activity {
     class MTLogin extends AsyncTask<String, String, ArrayList<Object>> {
 
         ProgressDialog pDialog;
-        String response;
-        String is_logged;
-        String username;
-        String code;
-        String loginID;
-        String result;
-        String message;
-        int flag = 0;
 
         private String webAddressToPost;
 
@@ -148,14 +213,7 @@ public class SignInActivity extends Activity {
             pDialog.setCancelable(false);
             pDialog.show();
 
-	 	    /*TelephonyManager TelephonyMgr = (TelephonyManager)getSystemService(TELEPHONY_SERVICE);
-            String m_deviceId = TelephonyMgr.getDeviceId();
-
-		    String m_androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
-		    System.out.println("Device ID " + m_androidId);*/
-
-            webAddressToPost = Constant.LOGIN_URL + Constant.LOGIN_EMAIL_ID + uEmail.getText().toString() + "&" + Constant.LOGIN_PASS + uPassword.getText().toString();
+	 	    webAddressToPost = Constant.LOGIN_URL + Constant.LOGIN_EMAIL_ID + uEmail.getText().toString() + "&" + Constant.LOGIN_PASS + uPassword.getText().toString();
 
         }
 
@@ -187,7 +245,6 @@ public class SignInActivity extends Activity {
                     finish();
 
                 } catch (JSONException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
 
@@ -198,7 +255,6 @@ public class SignInActivity extends Activity {
                     String message = jsnObject.getString("message");
                     Toast.makeText(SignInActivity.this, "" + message, Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }

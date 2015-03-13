@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="red">#f42424</color>
-    <color name="red_pressed">#e31a1a</color>
+    <color name="appcompat_color">#ff4e0c</color>
+
+    <color name="header_background_color">#2a9288</color>
+    <color name="bottom_background_color">#57b7af</color>
+    <color name="text_color">#242424</color>
+    <color name="login_btn_color">#ff4e0c</color>
+    <color name="sign_up_btn_color">#4bada5</color>
+    <color name="error_text_color">#C12121</color>
+    <color name="error_text_background_color">#F2DEDE</color>
+    <color name="input_text_border">#9b9b9b</color>
+    <color name="bottom_text">#ff4e0c</color>
+
+
+    <color name="red">#4bada5</color>
+    <color name="red_pressed">#4bada5</color>
 </resources>
