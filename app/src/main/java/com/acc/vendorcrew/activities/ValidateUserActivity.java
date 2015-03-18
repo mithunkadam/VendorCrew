@@ -2,13 +2,20 @@ package com.acc.vendorcrew.activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,35 +31,51 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ValidateUserActivity extends Activity {
+public class ValidateUserActivity extends Activity implements Animation.AnimationListener{
 
     public static final String PREFS_NAME = "RegisteredPrefs";
     EditText uPassword, uPin;
     TextView errorPassword, errorPin;
     Button submit;
-    String password, pin, RegisteredPrefs;
+    String password, pin, code;
     JSONParser jParser;
     boolean isInternetPresent = false;
     ConnectionDetector cd;
+    Animation animSlideUp, animSlideDown;
+    private SharedPreferences preferences;
+    private Context mContext = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_validate_user);
 
+        Typeface custom_font_regular = Typeface.createFromAsset(getAssets() , "font/ProximaNova-Reg.ttf");
+        Typeface custom_font_bold = Typeface.createFromAsset(getAssets() , "font/ProximaNova-Bold.ttf");
+
         uPassword = (EditText) findViewById(R.id.valid_password);
+        uPassword.setTypeface(custom_font_regular);
+
         uPin = (EditText) findViewById(R.id.valid_pin);
+        uPin.setTypeface(custom_font_regular);
 
         errorPassword = (TextView) findViewById(R.id.password_error_msg);
         errorPin = (TextView) findViewById(R.id.pin_error_msg);
 
         submit = (Button) findViewById(R.id.continue_btn);
+        submit.setTypeface(custom_font_bold);
 
         password = uPassword.getText().toString();
         pin = uPin.getText().toString();
 
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        RegisteredPrefs = settings.getString("registeredUser", "");
+        animSlideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
+        animSlideUp.setAnimationListener(this);
+
+        animSlideDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down);
+        animSlideDown.setAnimationListener(this);
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        code = preferences.getString("registeredUser", "");
 
         cd = new ConnectionDetector(getApplicationContext());
         isInternetPresent = cd.isConnectingToInternet();
@@ -60,47 +83,74 @@ public class ValidateUserActivity extends Activity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isValidUserInfo()) {
-                    if (isInternetPresent) {
-                        new MTValidate().execute();
-                    } else {
-                        Toast.makeText(getBaseContext(), "You don't have internet connection", Toast.LENGTH_SHORT).show();
+                if (isValidPassword()) {
+                    if (isValidPin()) {
+                        if (isInternetPresent) {
+                            new MTValidate().execute();
+                        } else {
+                            Toast.makeText(getBaseContext(), "You don't have internet connection", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             }
         });
-
     }
 
-    private boolean isValidUserInfo(){
-        boolean bpassword, bpin;
-
+    private boolean isValidPassword() {
         final String upassword = uPassword.getText().toString();
         if (!isValidPassword(upassword)) {
             errorPassword.setVisibility(View.VISIBLE);
-            bpassword = false;
-        }else {
+            errorPassword.startAnimation(animSlideDown);
+            return false;
+        } else {
+            errorPassword.startAnimation(animSlideUp);
             errorPassword.setVisibility(View.GONE);
-            bpassword = true;
+            return true;
         }
+    }
 
+    private boolean isValidPin(){
         final String upin = uPin.getText().toString();
         if (!isValidPin(upin)) {
             errorPin.setVisibility(View.VISIBLE);
-            bpin = false;
+            errorPin.startAnimation(animSlideDown);
+            return false;
         }else {
+            errorPin.startAnimation(animSlideUp);
             errorPin.setVisibility(View.GONE);
-            bpin = true;
+            return true;
         }
-        return bpassword && bpin;
     }
 
     private boolean isValidPassword(String uPassword) {
-        return !(uPassword.equals("") || uPassword.length() < 7);
+        if (!(uPassword.equals("") || uPassword.length() < 7)) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     private boolean isValidPin(String uPin) {
-        return !(uPin.equals("") || uPin.length() < 6);
+        if (!(uPin.equals("") || uPin.length() < 6)) {
+            return true;
+        }
+        else return false;
+    }
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
     }
 
     class MTValidate extends AsyncTask<String, String, ArrayList<Object>> {
@@ -118,7 +168,7 @@ public class ValidateUserActivity extends Activity {
             pDialog.show();
 
             webAddressToPost = Constant.VALIDATE_URL
-                    + Constant.VALIDATION_ACCOUNT_ID + "54fe87009ddd86767e1a4173" + "&"
+                    + Constant.VALIDATION_ACCOUNT_ID + code + "&"
                     + Constant.VALIDATION_PASSWORD + uPassword.getText().toString() + "&"
                     + Constant.VALIDATE_PIN + uPin.getText().toString();
 
@@ -157,16 +207,13 @@ public class ValidateUserActivity extends Activity {
 
 					String message = jsnObject.getString("error");
 					Toast.makeText(ValidateUserActivity.this, "" + message,Toast.LENGTH_LONG).show();
-
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             pDialog.dismiss();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -186,7 +233,6 @@ public class ValidateUserActivity extends Activity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

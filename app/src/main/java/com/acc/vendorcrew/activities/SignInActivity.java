@@ -35,11 +35,14 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SignInActivity extends Activity implements Animation.AnimationListener {
 
     Button signUp, signIn;
     EditText uEmail, uPassword;
+    TextView headerText, or, forgotPassword;
     ArrayList<SignUpModel> userList;
     private TextView errorEmail, errorPassword;
     Boolean isInternetPresent = false;
@@ -59,8 +62,15 @@ public class SignInActivity extends Activity implements Animation.AnimationListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        Typeface custom_font_regular = Typeface.createFromAsset(getAssets() , "font/ProximaNova-Bold.ttf");
-        Typeface custom_font_bold = Typeface.createFromAsset(getAssets() , "font/ProximaNova-Reg.ttf");
+        Typeface custom_font_regular = Typeface.createFromAsset(getAssets() , "font/ProximaNova-Reg.ttf");
+        Typeface custom_font_bold = Typeface.createFromAsset(getAssets() , "font/ProximaNova-Bold.ttf");
+
+        headerText = (TextView) findViewById(R.id.header_text);
+        headerText.setTypeface(custom_font_regular);
+        or = (TextView) findViewById(R.id.or);
+        or.setTypeface(custom_font_regular);
+        forgotPassword = (TextView) findViewById(R.id.forget_pwd);
+        forgotPassword.setTypeface(custom_font_regular);
 
         signUp = (Button) findViewById(R.id.sign_up);
         signIn = (Button) findViewById(R.id.sign_in);
@@ -69,6 +79,8 @@ public class SignInActivity extends Activity implements Animation.AnimationListe
 
         uEmail = (EditText) findViewById(R.id.email);
         uPassword = (EditText) findViewById(R.id.password);
+        uEmail.setTypeface(custom_font_regular);
+        uPassword.setTypeface(custom_font_regular);
 
         errorEmail = (TextView) findViewById(R.id.email_error_msg);
         errorPassword = (TextView) findViewById(R.id.password_error_msg);
@@ -83,40 +95,6 @@ public class SignInActivity extends Activity implements Animation.AnimationListe
 
         cd = new ConnectionDetector(getApplicationContext());
         isInternetPresent = cd.isConnectingToInternet();
-
-        uEmail.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                    isValidEmail();
-            }
-        });
-
-        uPassword.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                isValidPassword();
-            }
-        });
 
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,6 +130,7 @@ public class SignInActivity extends Activity implements Animation.AnimationListe
             errorEmail.startAnimation(animSlideDown);
             return false;
         } else {
+            errorEmail.startAnimation(animSlideUp);
             errorEmail.setVisibility(View.GONE);
             return true;
         }
@@ -164,17 +143,22 @@ public class SignInActivity extends Activity implements Animation.AnimationListe
             errorPassword.startAnimation(animSlideDown);
             return false;
         } else {
+            errorPassword.startAnimation(animSlideUp);
             errorPassword.setVisibility(View.GONE);
             return true;
         }
     }
 
     private boolean isValidEmail(String uemail) {
-        return uemail.equals("");
+
+        String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+        Matcher matcher = pattern.matcher(uemail);
+        return matcher.matches();
     }
 
     private boolean isValidPassword(String upassword) {
-        return upassword.equals("");
+        return upassword.length() >= 7;
     }
 
     @Override

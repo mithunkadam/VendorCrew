@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
-            android:background="@drawable/logo" />
+            android:background="@drawable/logo1" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -43,54 +43,59 @@
         android:id="@+id/valid_password"
         android:layout_width="230dp"
         android:layout_height="40dp"
-        android:paddingLeft="10dp"
+        android:paddingBottom="0dp"
         android:textSize="14sp"
         android:layout_marginTop="20dp"
         android:hint="@string/password"
+        android:gravity="center"
+        android:background="@drawable/appcompat_edit_text_holo_light"
         android:inputType="textPassword"
         android:layout_below="@+id/title"
         android:layout_centerHorizontal="true" >
         <requestFocus />
     </EditText>
 
+
     <TextView
         android:id="@+id/password_error_msg"
-        android:layout_width="230dp"
+        android:layout_width="match_parent"
         android:layout_height="40dp"
         android:paddingLeft="10dp"
-        android:layout_below="@id/valid_password"
-        android:layout_alignLeft="@id/valid_password"
-        android:layout_alignRight="@id/valid_password"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:background="@color/error_text_background_color"
         android:contentDescription="@null"
-        android:textSize="12sp"
-        android:textColor="#ee0000"
-        android:text="@string/name_error"
+        android:textSize="14sp"
+        android:textColor="@color/error_text_color"
+        android:text="@string/validate_password_error"
         android:visibility="gone"/>
 
     <EditText
         android:id="@+id/valid_pin"
         android:layout_width="230dp"
         android:layout_height="40dp"
-        android:paddingLeft="10dp"
+        android:paddingBottom="0dp"
         android:textSize="14sp"
+        android:gravity="center"
+        android:background="@drawable/appcompat_edit_text_holo_light"
         android:layout_alignLeft="@+id/valid_password"
         android:layout_below="@+id/valid_password"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:hint="pin"
         android:inputType="numberPassword" >
     </EditText>
 
     <TextView
         android:id="@+id/pin_error_msg"
-        android:layout_width="230dp"
+        android:layout_width="match_parent"
         android:layout_height="40dp"
         android:paddingLeft="10dp"
-        android:layout_below="@id/valid_pin"
-        android:layout_alignLeft="@id/valid_pin"
-        android:layout_alignRight="@id/valid_pin"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:background="@color/error_text_background_color"
         android:contentDescription="@null"
-        android:textSize="12sp"
-        android:textColor="#ee0000"
+        android:textSize="14sp"
+        android:textColor="@color/error_text_color"
         android:text="@string/Validate_pin_error"
         android:visibility="gone"/>
 
@@ -100,12 +105,12 @@
         android:layout_height="40dp"
         android:text="@string/validate"
         android:textAllCaps="false"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/button_text_color"
         android:textSize="20sp"
         android:textStyle="bold"
         android:paddingRight="60dp"
         android:paddingLeft="60dp"
-        android:background="#4bada5"
+        android:background="@drawable/login_button"
         android:layout_below="@id/valid_pin"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"/>

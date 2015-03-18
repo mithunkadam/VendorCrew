@@ -12,30 +12,37 @@
     <string name="cms_forgetpwd">Forget your password ?</string>
     <string name="title_activity_add_vendor_category">AddVendorCategoryActivity</string>
     <string name="title_activity_add_brands">AddBrandsActivity</string>
-    <string name="logo">Stay connected with your vendors and service providers!</string>
+    <string name="logo">An easiest way to connect with your service providers</string>
     <string name="sign_up">Sign Up</string>
-    <string name="or">OR</string>
+    <string name="or">or</string>
     <string name="text">Existing Users can login below</string>
-    <string name="email_id">email id</string>
-    <string name="password">password</string>
-    <string name="login">Login</string>
+    <string name="login">Log In</string>
     <string name="forget_pwd">Forgot Password?</string>
     <string name="title_activity_sign_up">SignUp</string>
 
     <!-- Sign Up screen -->
+    <string name="sign_up_title">Create An Account</string>
     <string name="name">name</string>
+    <string name="email_id">email id</string>
+    <string name="password">password</string>
+    <string name="city">city</string>
+    <string name="state">state</string>
+    <string name="country">country</string>
     <string name="mob_no">mobile no</string>
-    <string name="login_here">Login Here</string>
-    <string name="register_user">Registered Users?</string>
-    <string name="bottom_text">By signin up, you agree to our terms &amp; services</string>
+    <string name="disclaimer_text1">By signing up, you agree to our</string>
+    <string name="disclaimer_text2">Terms of Service</string>
+    <string name="and">&amp;</string>
+    <string name="disclaimer_text3">Privacy Policy</string>
+    <string name="already_member">Already a member?</string>
     
     <!-- Error messages -->
-    <string name="name_error">can not blank</string>
+    <string name="name_error">Name can not blank</string>
     <string name="email_error">Please enter valid email id</string>
-    <string name="password_error">Minimum 7 digit</string>
-    <string name="mob_no_error">Minimum 12 digit with country code</string>
-    <string name="erroremail">Please enter your email address.</string>
-    <string name="errorpassword">Please enter your password.</string>
+    <string name="password_error">Password minimum 7 digit</string>
+    <string name="mob_no_error">Mobile no minimum 10 digit</string>
+    <string name="city_error">City name cannot blank</string>
+    <string name="state_error">State name cannot blank</string>
+    <string name="country_error">Country name cannot blank</string>
 
     <!-- Validate Screen-->
     <string name="user_validation">User Validation Form</string>
