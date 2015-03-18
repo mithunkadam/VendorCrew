@@ -7,7 +7,7 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="164dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/header_background"
         android:gravity="center"
         android:paddingTop="20dp"
@@ -105,7 +105,7 @@
         android:textSize="14sp"
         android:textColor="@color/error_text_color"
         android:background="@color/error_text_background_color"
-        android:text="@string/erroremail"
+        android:text="@string/email_error"
         android:visibility="gone"/>
 
 
@@ -135,7 +135,7 @@
         android:contentDescription="@null"
         android:textSize="14sp"
         android:textColor="@color/error_text_color"
-        android:text="@string/errorpassword"
+        android:text="@string/password_error"
         android:visibility="gone"/>
 
     <Button

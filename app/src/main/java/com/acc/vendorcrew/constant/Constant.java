@@ -11,10 +11,14 @@ public class Constant {
 
     //************************* for Registration **************************
 
+    public static final String REGISTRATION_NAME = "name=";
     public static final String REGISTRATION_DEVICE_ID = "deviceid=";
     public static final String REGISTRATION_EMAIL_ID = "email=";
     public static final String REGISTRATION_MOBILE_NUMBER = "phonenumber=";
     public static final String REGISTRATION_PASS = "password=";
+    public static final String REGISTRATION_CITY = "city=";
+    public static final String REGISTRATION_STATE = "state=";
+    public static final String REGISTRATION_COUNTRY = "country=";
     public static final String REGISTRATION_MESSAGE = "message";
     public static final String REGISTRATION_ID = "_id";
 

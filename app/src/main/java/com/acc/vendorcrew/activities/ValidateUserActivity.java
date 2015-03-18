@@ -45,7 +45,6 @@ public class ValidateUserActivity extends Activity implements Animation.Animatio
     private SharedPreferences preferences;
     private Context mContext = this;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,40 +67,6 @@ public class ValidateUserActivity extends Activity implements Animation.Animatio
 
         password = uPassword.getText().toString();
         pin = uPin.getText().toString();
-
-        uPassword.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                isValidPassword();
-            }
-        });
-
-        uPin.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                isValidPin();
-            }
-        });
 
         animSlideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
         animSlideUp.setAnimationListener(this);
@@ -242,16 +207,13 @@ public class ValidateUserActivity extends Activity implements Animation.Animatio
 
 					String message = jsnObject.getString("error");
 					Toast.makeText(ValidateUserActivity.this, "" + message,Toast.LENGTH_LONG).show();
-
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             pDialog.dismiss();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -271,7 +233,6 @@ public class ValidateUserActivity extends Activity implements Animation.Animatio
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

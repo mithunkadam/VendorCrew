@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:scrollbars="none">
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -7,7 +12,7 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="164dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/header_background"
         android:gravity="center"
         android:paddingTop="20dp"
@@ -114,6 +119,7 @@
         android:textColor="@color/error_text_color"
         android:text="@string/password_error"
         android:visibility="gone"/>
+
     <EditText
         android:id="@+id/country_code"
         android:layout_width="60dp"
@@ -121,6 +127,7 @@
         android:inputType="number"
         android:background="@drawable/appcompat_edit_text_holo_light"
         android:layout_below="@+id/password"
+        android:gravity="center"
         android:layout_marginTop="10dp"
         android:paddingBottom="0dp"
         android:layout_alignLeft="@+id/password"
@@ -153,8 +160,90 @@
         android:text="@string/mob_no_error"
         android:visibility="gone"/>
 
-    <Button
+    <EditText
+        android:id="@+id/city"
+        android:layout_width="280dp"
+        android:layout_height="40dp"
+        android:textColor="@color/text_color"
+        android:layout_below="@+id/mob_no"
+        android:paddingBottom="0dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/appcompat_edit_text_holo_light"
+        android:layout_marginTop="10dp"
+        android:hint="@string/city"
+        android:gravity="center"
+        android:inputType="text" />
 
+    <TextView
+        android:id="@+id/city_error"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:background="@color/error_text_background_color"
+        android:contentDescription="@null"
+        android:textColor="@color/error_text_color"
+        android:text="@string/city_error"
+        android:visibility="gone"/>
+
+
+    <EditText
+        android:id="@+id/state"
+        android:layout_width="280dp"
+        android:layout_height="40dp"
+        android:textColor="@color/text_color"
+        android:layout_below="@+id/city"
+        android:paddingBottom="0dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/appcompat_edit_text_holo_light"
+        android:layout_marginTop="10dp"
+        android:hint="@string/state"
+        android:gravity="center"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/state_error"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:background="@color/error_text_background_color"
+        android:contentDescription="@null"
+        android:textColor="@color/error_text_color"
+        android:text="@string/state_error"
+        android:visibility="gone"/>
+
+
+    <EditText
+        android:id="@+id/country"
+        android:layout_width="280dp"
+        android:layout_height="40dp"
+        android:textColor="@color/text_color"
+        android:layout_below="@+id/state"
+        android:paddingBottom="0dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/appcompat_edit_text_holo_light"
+        android:layout_marginTop="10dp"
+        android:hint="@string/country"
+        android:gravity="center"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/country_error"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:background="@color/error_text_background_color"
+        android:contentDescription="@null"
+        android:textColor="@color/error_text_color"
+        android:text="@string/country_error"
+        android:visibility="gone"/>
+
+    <Button
         android:id="@+id/sign_up"
         android:layout_width="280dp"
         android:layout_height="40dp"
@@ -163,7 +252,7 @@
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         android:background="@drawable/signup_button"
-        android:layout_below="@+id/mob_no"
+        android:layout_below="@+id/country"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"/>
 
@@ -214,10 +303,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@drawable/focus_color_text"
+        android:textSize="16sp"
         android:text="@string/already_member"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
+        android:layout_below="@+id/disclaimer_text2"
+        android:layout_marginTop="25dp"
         android:clickable="true"/>
 
 </RelativeLayout>
+</ScrollView>

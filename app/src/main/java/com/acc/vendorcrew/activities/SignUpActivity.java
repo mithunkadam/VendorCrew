@@ -50,8 +50,8 @@ public class SignUpActivity extends Activity implements Animation.AnimationListe
 
     private String TAG = "Response";
     private Button signUp;
-    private EditText name, email, password, country_code, mobNo;
-    private TextView header_text, errorName, errorEmail, errorPassword, errorMobileNo, and, disclaimerText1, disclaimerText2, disclaimerText3, alreadyLogin;
+    private EditText name, email, password, country_code, mobNo, city, state, country;
+    private TextView header_text, errorName, errorEmail, errorPassword, errorMobileNo,errorCity, errorState, errorCountry, and, disclaimerText1, disclaimerText2, disclaimerText3, alreadyLogin;
     Animation animSlideUp, animSlideDown;
     private Context mContext = this;
     protected SharedPreferences preferences;
@@ -80,6 +80,9 @@ public class SignUpActivity extends Activity implements Animation.AnimationListe
         password = (EditText) findViewById(R.id.password);
         country_code = (EditText) findViewById(R.id.country_code);
         mobNo = (EditText) findViewById(R.id.mob_no);
+        city = (EditText) findViewById(R.id.city);
+        state = (EditText) findViewById(R.id.state);
+        country = (EditText) findViewById(R.id.country);
 
         country_code.setText("+"+GetCountryZipCode());
         mobNo.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
@@ -89,11 +92,17 @@ public class SignUpActivity extends Activity implements Animation.AnimationListe
         email.setTypeface(custom_font_regular);
         password.setTypeface(custom_font_regular);
         mobNo.setTypeface(custom_font_regular);
+        city.setTypeface(custom_font_regular);
+        state.setTypeface(custom_font_regular);
+        country.setTypeface(custom_font_regular);
 
         header_text = (TextView) findViewById(R.id.header_text);
         errorName = (TextView) findViewById(R.id.name_error);
         errorEmail = (TextView) findViewById(R.id.email_error);
         errorPassword = (TextView) findViewById(R.id.password_error);
+        errorCity = (TextView) findViewById(R.id.city_error);
+        errorState = (TextView) findViewById(R.id.state_error);
+        errorCountry = (TextView) findViewById(R.id.country_error);
         errorMobileNo = (TextView) findViewById(R.id.mob_no_error);
         disclaimerText1 = (TextView) findViewById(R.id.disclaimer_text1);
         disclaimerText2 = (TextView) findViewById(R.id.disclaimer_text2);
@@ -105,6 +114,9 @@ public class SignUpActivity extends Activity implements Animation.AnimationListe
         errorEmail.setTypeface(custom_font_regular);
         errorPassword.setTypeface(custom_font_regular);
         errorMobileNo.setTypeface(custom_font_regular);
+        errorCity.setTypeface(custom_font_regular);
+        errorState.setTypeface(custom_font_regular);
+        errorCountry.setTypeface(custom_font_regular);
         disclaimerText1.setTypeface(custom_font_regular);
         disclaimerText2.setTypeface(custom_font_regular);
         disclaimerText3.setTypeface(custom_font_regular);
@@ -123,74 +135,6 @@ public class SignUpActivity extends Activity implements Animation.AnimationListe
         cd = new ConnectionDetector(getApplicationContext());
         isInternetPresent = cd.isConnectingToInternet();
 
-        name.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                isValidName();
-            }
-        });
-
-        email.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                isValidEmail();
-            }
-        });
-
-        password.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                isValidPassword();
-            }
-        });
-
-        mobNo.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                isValidMobNo();
-            }
-        });
-
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -198,14 +142,19 @@ public class SignUpActivity extends Activity implements Animation.AnimationListe
                     if (isValidEmail()) {
                         if (isValidPassword()) {
                             if (isValidMobNo()) {
-                                if (isInternetPresent) {
-                                    new MTRegistration().execute();
-                                } else {
-                                    Toast.makeText(getBaseContext(), "You don't have internet connection", Toast.LENGTH_SHORT).show();
+                                if (isValidCity()) {
+                                    if(isValidState()) {
+                                        if(isValidCountry()) {
+                                            if (isInternetPresent) {
+                                                new MTRegistration().execute();
+                                            } else {
+                                                Toast.makeText(getBaseContext(), "You don't have internet connection", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
-
                     }
                 }
             }
@@ -225,8 +174,10 @@ public class SignUpActivity extends Activity implements Animation.AnimationListe
         final String uName = name.getText().toString();
         if (!isValidName(uName)) {
             errorName.setVisibility(View.VISIBLE);
+            errorName.startAnimation(animSlideDown);
             return false;
         } else {
+            errorName.startAnimation(animSlideUp);
             errorName.setVisibility(View.GONE);
             return true;
         }
@@ -236,8 +187,10 @@ public class SignUpActivity extends Activity implements Animation.AnimationListe
         final String uEmail = email.getText().toString();
         if (!isValidEmail(uEmail)) {
             errorEmail.setVisibility(View.VISIBLE);
+            errorEmail.startAnimation(animSlideDown);
             return false;
         } else {
+            errorEmail.startAnimation(animSlideUp);
             errorEmail.setVisibility(View.GONE);
             return true;
         }
@@ -260,9 +213,50 @@ public class SignUpActivity extends Activity implements Animation.AnimationListe
         final String uMobNo = mobNo.getText().toString();
         if (!isValidMobNo(uMobNo)) {
             errorMobileNo.setVisibility(View.VISIBLE);
+            errorMobileNo.startAnimation(animSlideDown);
             return false;
         } else {
+            errorMobileNo.startAnimation(animSlideUp);
             errorMobileNo.setVisibility(View.GONE);
+            return true;
+        }
+    }
+
+    private boolean isValidCity() {
+        final String uCity = city.getText().toString();
+        if (!isValidCity(uCity)) {
+            errorCity.setVisibility(View.VISIBLE);
+            errorCity.startAnimation(animSlideDown);
+            return false;
+        } else {
+            errorCity.startAnimation(animSlideUp);
+            errorCity.setVisibility(View.GONE);
+            return true;
+        }
+    }
+
+    private boolean isValidState() {
+        final String uState = state.getText().toString();
+        if (!isValidState(uState)) {
+            errorState.setVisibility(View.VISIBLE);
+            errorState.startAnimation(animSlideDown);
+            return false;
+        } else {
+            errorState.startAnimation(animSlideUp);
+            errorState.setVisibility(View.GONE);
+            return true;
+        }
+    }
+
+    private boolean isValidCountry() {
+        final String uCountry = country.getText().toString();
+        if (!isValidCountry(uCountry)) {
+            errorCountry.setVisibility(View.VISIBLE);
+            errorCountry.startAnimation(animSlideDown);
+            return false;
+        } else {
+            errorCountry.startAnimation(animSlideUp);
+            errorCountry.setVisibility(View.GONE);
             return true;
         }
     }
@@ -288,6 +282,18 @@ public class SignUpActivity extends Activity implements Animation.AnimationListe
         }else {
             return true;
         }
+    }
+
+    private boolean isValidCity(String uCity) {
+        return !uCity.equals("");
+    }
+
+    private boolean isValidState(String uState) {
+        return !uState.equals("");
+    }
+
+    private boolean isValidCountry(String uCountry) {
+        return !uCountry.equals("");
     }
 
     @Override
@@ -318,7 +324,7 @@ public class SignUpActivity extends Activity implements Animation.AnimationListe
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
             pDialog.show();
-
+            String uName = name.getText().toString();
             String uEmail = email.getText().toString();
             String uPassword = password.getText().toString();
             String code = GetCountryZipCode();
@@ -327,8 +333,9 @@ public class SignUpActivity extends Activity implements Animation.AnimationListe
             String uMobNo = code + mob ;
             String mobileNo = uMobNo.replaceAll(regex, "");
             mobileNo = uMobNo.replaceAll(" " ,"");
-            System.out.println("Mobile No: "+mobileNo);
-
+            String uCity = city.getText().toString();
+            String uState = state.getText().toString();
+            String uCountry = country.getText().toString();
 
 		    TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
             String m_deviceId = telephonyManager.getDeviceId();
@@ -337,7 +344,11 @@ public class SignUpActivity extends Activity implements Animation.AnimationListe
                     + Constant.REGISTRATION_EMAIL_ID + uEmail + "&"
                     + Constant.REGISTRATION_PASS + uPassword + "&"
                     + Constant.REGISTRATION_MOBILE_NUMBER + mobileNo + "&"
-                    + Constant.REGISTRATION_DEVICE_ID + m_deviceId;
+                    + Constant.REGISTRATION_DEVICE_ID + m_deviceId + "&"
+                    + Constant.REGISTRATION_COUNTRY + uCountry +"&"
+                    + Constant.REGISTRATION_CITY + uCity +"&"
+                    + Constant.REGISTRATION_STATE + uState +"&"
+                    + Constant.REGISTRATION_NAME + uName;
 
             System.out.println("Response in onPreExecute" + webAddressToPost);
         }
