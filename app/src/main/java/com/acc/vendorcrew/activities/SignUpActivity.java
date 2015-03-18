@@ -8,15 +8,20 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.TelephonyManager;
+import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextWatcher;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -41,18 +46,19 @@ import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SignUpActivity extends Activity {
+public class SignUpActivity extends Activity implements Animation.AnimationListener{
 
     private String TAG = "Response";
     private Button signUp;
-    private EditText name, email, password, mobNo;
-    private TextView errorName, errorEmail, errorPassword, errorMobileNo, login, register_user, header_text, bottom_text;
-
+    private EditText name, email, password, country_code, mobNo;
+    private TextView header_text, errorName, errorEmail, errorPassword, errorMobileNo, and, disclaimerText1, disclaimerText2, disclaimerText3, alreadyLogin;
+    Animation animSlideUp, animSlideDown;
     private Context mContext = this;
-
+    protected SharedPreferences preferences;
+    protected SharedPreferences.Editor editor;
+    public static final String PREFS_NAME = "RegisterPrefs";
     Boolean isInternetPresent = false;
     ConnectionDetector cd;
-    public static final String PREFS_NAME = "RegisterPrefs";
 
     private Database getDatabase() {
         Vendor vendor = (Vendor) getApplication();
@@ -63,21 +69,19 @@ public class SignUpActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        Typeface custom_font_regular = Typeface.createFromAsset(getAssets() , "font/ProximaNova-Bold.ttf");
-        Typeface custom_font_bold = Typeface.createFromAsset(getAssets() , "font/ProximaNova-Reg.ttf");
+        Typeface custom_font_regular = Typeface.createFromAsset(getAssets() , "font/ProximaNova-Reg.ttf");
+        Typeface custom_font_bold = Typeface.createFromAsset(getAssets() , "font/ProximaNova-Bold.ttf");
 
-        SpannableString str = new SpannableString("Login Here");
-        str.setSpan(new UnderlineSpan(), 0, str.length(), Spanned.SPAN_PARAGRAPH);
-        login = (TextView) findViewById(R.id.login_here);
-        login.setTypeface(custom_font_bold);
-        login.setText(str);
+        alreadyLogin = (TextView) findViewById(R.id.already_member);
+        alreadyLogin.setTypeface(custom_font_bold);
 
         name = (EditText) findViewById(R.id.name);
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
+        country_code = (EditText) findViewById(R.id.country_code);
         mobNo = (EditText) findViewById(R.id.mob_no);
 
-        mobNo.setText(GetCountryZipCode()+" ");
+        country_code.setText("+"+GetCountryZipCode());
         mobNo.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
 
@@ -86,22 +90,32 @@ public class SignUpActivity extends Activity {
         password.setTypeface(custom_font_regular);
         mobNo.setTypeface(custom_font_regular);
 
+        header_text = (TextView) findViewById(R.id.header_text);
         errorName = (TextView) findViewById(R.id.name_error);
         errorEmail = (TextView) findViewById(R.id.email_error);
         errorPassword = (TextView) findViewById(R.id.password_error);
         errorMobileNo = (TextView) findViewById(R.id.mob_no_error);
-        register_user = (TextView) findViewById(R.id.register_user);
-        header_text = (TextView) findViewById(R.id.header_text);
-        bottom_text = (TextView) findViewById(R.id.bottom_text);
+        disclaimerText1 = (TextView) findViewById(R.id.disclaimer_text1);
+        disclaimerText2 = (TextView) findViewById(R.id.disclaimer_text2);
+        disclaimerText3 = (TextView) findViewById(R.id.disclaimer_text3);
+        and = (TextView) findViewById(R.id.and);
 
-
+        header_text.setTypeface(custom_font_regular);
         errorName.setTypeface(custom_font_regular);
         errorEmail.setTypeface(custom_font_regular);
         errorPassword.setTypeface(custom_font_regular);
         errorMobileNo.setTypeface(custom_font_regular);
-        register_user.setTypeface(custom_font_regular);
-        header_text.setTypeface(custom_font_regular);
-        bottom_text.setTypeface(custom_font_regular);
+        disclaimerText1.setTypeface(custom_font_regular);
+        disclaimerText2.setTypeface(custom_font_regular);
+        disclaimerText3.setTypeface(custom_font_regular);
+        and.setTypeface(custom_font_regular);
+
+        animSlideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
+        animSlideUp.setAnimationListener(this);
+
+        animSlideDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down);
+        animSlideDown.setAnimationListener(this);
+
 
         signUp = (Button) findViewById(R.id.sign_up);
         signUp.setTypeface(custom_font_bold);
@@ -109,16 +123,84 @@ public class SignUpActivity extends Activity {
         cd = new ConnectionDetector(getApplicationContext());
         isInternetPresent = cd.isConnectingToInternet();
 
+        name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                isValidName();
+            }
+        });
+
+        email.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                isValidEmail();
+            }
+        });
+
+        password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                isValidPassword();
+            }
+        });
+
+        mobNo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                isValidMobNo();
+            }
+        });
+
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isValidName()) {
-                    if(isValidEmail()){
-                        if(isValidPassword()){
-                            if(isValidMobNo()){
+                    if (isValidEmail()) {
+                        if (isValidPassword()) {
+                            if (isValidMobNo()) {
                                 if (isInternetPresent) {
                                     new MTRegistration().execute();
-                                }else{
+                                } else {
                                     Toast.makeText(getBaseContext(), "You don't have internet connection", Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -129,7 +211,7 @@ public class SignUpActivity extends Activity {
             }
         });
 
-        login.setOnClickListener(new View.OnClickListener() {
+        alreadyLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(SignUpActivity.this, SignInActivity.class);
@@ -165,8 +247,10 @@ public class SignUpActivity extends Activity {
         final String uPassword = password.getText().toString();
         if (!isValidPassword(uPassword)) {
             errorPassword.setVisibility(View.VISIBLE);
+            errorPassword.startAnimation(animSlideDown);
             return false;
         } else {
+            errorPassword.startAnimation(animSlideUp);
             errorPassword.setVisibility(View.GONE);
             return true;
         }
@@ -199,7 +283,26 @@ public class SignUpActivity extends Activity {
     }
 
     private boolean isValidMobNo(String uMobNo) {
-        return !(uMobNo.equals("") || uMobNo.length() != 12);
+        if(uMobNo.equals("")){
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
     }
 
     class MTRegistration extends AsyncTask<String, String, ArrayList<Object>> {
@@ -218,7 +321,14 @@ public class SignUpActivity extends Activity {
 
             String uEmail = email.getText().toString();
             String uPassword = password.getText().toString();
-            String uMobNo = mobNo.getText().toString();
+            String code = GetCountryZipCode();
+            String mob = mobNo.getText().toString();
+            String regex = "\\(|\\)|\\-|";
+            String uMobNo = code + mob ;
+            String mobileNo = uMobNo.replaceAll(regex, "");
+            mobileNo = uMobNo.replaceAll(" " ,"");
+            System.out.println("Mobile No: "+mobileNo);
+
 
 		    TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
             String m_deviceId = telephonyManager.getDeviceId();
@@ -226,7 +336,7 @@ public class SignUpActivity extends Activity {
             webAddressToPost = Constant.REGISTRATION_URL
                     + Constant.REGISTRATION_EMAIL_ID + uEmail + "&"
                     + Constant.REGISTRATION_PASS + uPassword + "&"
-                    + Constant.REGISTRATION_MOBILE_NUMBER + uMobNo + "&"
+                    + Constant.REGISTRATION_MOBILE_NUMBER + mobileNo + "&"
                     + Constant.REGISTRATION_DEVICE_ID + m_deviceId;
 
             System.out.println("Response in onPreExecute" + webAddressToPost);
@@ -270,11 +380,12 @@ public class SignUpActivity extends Activity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-                    SharedPreferences.Editor editor = settings.edit();
+//                    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+//                    SharedPreferences.Editor editor = settings.edit();
+                    preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+                    editor = preferences.edit();
                     editor.putString("registeredUser", registrationID);
                     editor.commit();
-
 
                     Intent intent = new Intent(SignUpActivity.this, ValidateUserActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

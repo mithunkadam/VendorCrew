@@ -14,4 +14,5 @@
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:textSize">13.5sp</item>
     </style>
+
 </resources>

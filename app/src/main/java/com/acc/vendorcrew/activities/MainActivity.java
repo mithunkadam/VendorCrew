@@ -2,10 +2,12 @@ package com.acc.vendorcrew.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.acc.vendorcrew.R;
 
@@ -13,10 +15,16 @@ import com.acc.vendorcrew.R;
 public class MainActivity extends Activity {
 
     private static int SPLASH_TIME_OUT = 5000;
+    TextView text;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        text = (TextView) findViewById(R.id.text);
+        Typeface custom_font_regular = Typeface.createFromAsset(getAssets() , "font/ProximaNova-Reg.ttf");
+        Typeface custom_font_bold = Typeface.createFromAsset(getAssets() , "font/ProximaNova-Bold.ttf");
+
+        text.setTypeface(custom_font_bold);
 
         new Handler().postDelayed(new Runnable() {
             /*
