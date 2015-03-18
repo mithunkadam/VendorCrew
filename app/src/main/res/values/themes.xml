@@ -3,16 +3,19 @@
     <style name="CustomTheme"
         parent="android:style/Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/MyAction</item>
+        <item name="android:actionOverflowButtonStyle">@style/MyAction.OverFlow</item>
     </style>
+
+
     <style name="MyAction"
         parent="android:style/Widget.Holo.Light.ActionBar.Solid">
         <item name="android:background">@drawable/actionbar_bg</item>
         <item name="android:titleTextStyle">@style/MyAction.TextStyle</item>
     </style>
+
     <style name="MyAction.TextStyle"
         parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:textSize">13.5sp</item>
     </style>
-
 </resources>

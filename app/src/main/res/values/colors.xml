@@ -17,7 +17,7 @@
     <color name="link_on_focus">#7b2100</color>
     <color name="button_text_color">#FFFFFF</color>
 
-    <color name="red">#4bada5</color>
-    <color name="red_pressed">#4bada5</color>
-</resources>
 
+    <color name="orange">#FF9900</color>
+    <color name="orange_pressed">#FF9900</color>
+</resources>
