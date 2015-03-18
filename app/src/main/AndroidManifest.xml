@@ -36,11 +36,16 @@
             android:name=".activities.AddVendorCategoryActivity"
             android:label=""
             android:theme="@style/CustomTheme" >
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
         <activity
             android:name=".activities.AddBrandsActivity"
             android:label=""
             android:theme="@style/CustomTheme" >
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+
         </activity>
         <activity
             android:name=".activities.ValidateUserActivity"

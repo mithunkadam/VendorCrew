@@ -2,10 +2,10 @@ package com.acc.vendorcrew.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,29 +14,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.acc.vendorcrew.R;
 import com.acc.vendorcrew.adapters.VendorImageAdapter;
-import com.acc.vendorcrew.constant.Constant;
 import com.acc.vendorcrew.json.JSONParser;
-import com.acc.vendorcrew.model.CategoriesModel;
 import com.getbase.floatingactionbutton.FloatingActionButton;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 
 public class AddVendorCategoryActivity extends Activity {
@@ -101,39 +85,39 @@ public class AddVendorCategoryActivity extends Activity {
             R.drawable.mobiles,
             R.drawable.computers,
             R.drawable.other,
-            R.drawable.electonics,
-            R.drawable.telecom,
-            R.drawable.finance,
-            R.drawable.medical,
-            R.drawable.groceries,
-            R.drawable.banks,
-            R.drawable.mobiles,
-            R.drawable.computers,
             R.drawable.other,
-            R.drawable.electonics,
-            R.drawable.telecom,
-            R.drawable.finance,
-            R.drawable.medical,
-            R.drawable.groceries,
-            R.drawable.banks,
-            R.drawable.mobiles,
-            R.drawable.computers,
             R.drawable.other,
-            R.drawable.electonics,
-            R.drawable.telecom,
-            R.drawable.finance,
-            R.drawable.medical,
-            R.drawable.groceries,
-            R.drawable.banks,
-            R.drawable.mobiles,
-            R.drawable.computers,
             R.drawable.other,
-            R.drawable.electonics,
-            R.drawable.telecom,
-            R.drawable.finance,
-            R.drawable.medical,
-            R.drawable.groceries,
-            R.drawable.banks
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
+            R.drawable.other,
     };
 
     @Override
@@ -160,8 +144,8 @@ public class AddVendorCategoryActivity extends Activity {
 
         FloatingActionButton button = (FloatingActionButton) findViewById(R.id.setter);
 //        button.setSize(FloatingActionButton.SIZE_MINI);
-        button.setColorNormalResId(R.color.red);
-        button.setColorPressedResId(R.color.red_pressed);
+        button.setColorNormalResId(R.color.orange);
+        button.setColorPressedResId(R.color.orange_pressed);
         button.setIcon(R.drawable.ic_add186);
         button.setStrokeVisible(false);
 
@@ -171,6 +155,7 @@ public class AddVendorCategoryActivity extends Activity {
         gridView = (GridView) findViewById(R.id.gridview);
         gridView.setAdapter(new VendorImageAdapter(this , web , imageId));
 //        new GetData().execute();
+
 //        gridView.setAdapter(new VendorImageAdapter(mContext, new ArrayList<CategoriesModel>(), imageId));
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -182,6 +167,7 @@ public class AddVendorCategoryActivity extends Activity {
             }
         });
 
+
     }
 
 
@@ -189,6 +175,15 @@ public class AddVendorCategoryActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_add_vendor_category, menu);
+
+
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+
         return true;
     }
 
@@ -207,7 +202,7 @@ public class AddVendorCategoryActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 /*
-    class GetData extends AsyncTask<String, Void, ArrayList<Object>> {
+    class GetData extends AsyncTask<String, String, ArrayList<Object>> {
         JSONObject json = null;
         String str = "";
         HttpResponse response;
@@ -228,6 +223,18 @@ public class AddVendorCategoryActivity extends Activity {
                 c.setCategoryId(json.getInt("categoryid"));
                 c.setImagePath(json.getString("imagepath"));
 
+                gridView.setAdapter(new VendorImageAdapter(mContext, new ArrayList<CategoriesModel>(), imageId));
+                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                 Intent i = new Intent(mContext, AddBrandsActivity.class);
+                 i.putExtra("VENDOR_NAME", web[position]);
+                 i.putExtra("RESOURCE_ID", position);
+                 startActivity(i);
+            }
+        });
+
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -243,8 +250,6 @@ public class AddVendorCategoryActivity extends Activity {
                 response = myClient.execute(myConnection);
                 str = EntityUtils.toString(response.getEntity(), "UTF-8");
 
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }

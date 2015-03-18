@@ -13,6 +13,6 @@
     <color name="bottom_text">#ff4e0c</color>
 
 
-    <color name="red">#4bada5</color>
-    <color name="red_pressed">#4bada5</color>
+    <color name="orange">#FF9900</color>
+    <color name="orange_pressed">#FF9900</color>
 </resources>
