@@ -50,21 +50,23 @@ public class VendorImageAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View grid;
 
-        LayoutInflater inflater = (LayoutInflater) mContext
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) mContext
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
             grid = new View(mContext);
             grid = inflater.inflate(R.layout.grid_single, null);
-            TextView textView = (TextView) grid.findViewById(R.id.grid_text);
-            ImageView imageView = (ImageView) grid.findViewById(R.id.grid_image);
-
-            Typeface custom_font = Typeface.createFromAsset(mContext.getAssets() , "font/ProximaNova-Reg.ttf");
-            textView.setTypeface(custom_font);
-            textView.setText(web[position]);
-            imageView.setImageResource(imageid[position]);
         } else {
             grid = (View) convertView;
         }
+        TextView textView = (TextView) grid.findViewById(R.id.grid_text);
+        ImageView imageView = (ImageView) grid.findViewById(R.id.grid_image);
+
+        Typeface custom_font = Typeface.createFromAsset(mContext.getAssets() , "font/ProximaNova-Reg.ttf");
+        textView.setTypeface(custom_font);
+        textView.setText(web[position]);
+        imageView.setImageResource(imageid[position]);
+
         return grid;
 
     };
