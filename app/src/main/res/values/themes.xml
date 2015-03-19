@@ -18,4 +18,9 @@
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:textSize">13.5sp</item>
     </style>
+
+    <style name="MyAction.OverFlow"  parent="android:style/Widget.Holo.Light.ActionButton.Overflow">
+        <item name="android:src">@drawable/menu2</item>
+    </style>
+
 </resources>

@@ -272,6 +272,10 @@
     </string-array>
     <string name="title_activity_validate_user">ValidateUserActivity</string>
 
+    <!--Search Hint-->
+    <string name="search_hint">Search...</string>
+    <string name="title_activity_searchable">SearchableActivity</string>
+
     <string name="hello_world">Hello world!</string>
 
 </resources>
