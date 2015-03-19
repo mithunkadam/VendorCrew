@@ -17,7 +17,7 @@ public class User {
     private static final String DOC_TYPE = "user";
     private static final String VIEW_NAME = "users";
 
-    public static Document createUser(Database database, String email, String name , String pass , String contact , String external_id , String updateTime)
+    public static Document createUser(Database database, String email, String name , String pass , String contact ,String city, String state, String country, String external_id , String updateTime)
             throws CouchbaseLiteException {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         Calendar calendar = GregorianCalendar.getInstance();
@@ -29,13 +29,16 @@ public class User {
         properties.put("email",email);
         properties.put("password",pass);
         properties.put("mobile_number",contact);
+        properties.put("city",city);
+        properties.put("state",state);
+        properties.put("country",country);
+        properties.put("mobile_number",contact);
         properties.put("created_at", currentTimeString);
         properties.put("external_id",external_id);
         properties.put("updated_at",updateTime);
 
         Document document = database.createDocument();
         document.putProperties(properties);
-
         return document;
     }
 }

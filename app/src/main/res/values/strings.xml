@@ -27,7 +27,7 @@
     <string name="password">password</string>
     <string name="city">city</string>
     <string name="state">state</string>
-    <string name="country">country</string>
+    <string name="country">IN</string>
     <string name="mob_no">mobile no</string>
     <string name="disclaimer_text1">By signing up, you agree to our</string>
     <string name="disclaimer_text2">Terms of Service</string>

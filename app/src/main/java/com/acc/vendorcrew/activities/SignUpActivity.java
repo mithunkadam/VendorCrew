@@ -59,6 +59,7 @@ public class SignUpActivity extends Activity implements Animation.AnimationListe
     public static final String PREFS_NAME = "RegisterPrefs";
     Boolean isInternetPresent = false;
     ConnectionDetector cd;
+    String CountryID, mobileNo;
 
     private Database getDatabase() {
         Vendor vendor = (Vendor) getApplication();
@@ -87,6 +88,10 @@ public class SignUpActivity extends Activity implements Animation.AnimationListe
         country_code.setText("+"+GetCountryZipCode());
         mobNo.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
+        TelephonyManager manager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        //getNetworkCountryIso
+        CountryID= manager.getSimCountryIso().toUpperCase();
+        country.setText(CountryID);
 
         name.setTypeface(custom_font_regular);
         email.setTypeface(custom_font_regular);
@@ -168,6 +173,7 @@ public class SignUpActivity extends Activity implements Animation.AnimationListe
                 finish();
             }
         });
+
     }
 
     private boolean isValidName() {
@@ -331,7 +337,7 @@ public class SignUpActivity extends Activity implements Animation.AnimationListe
             String mob = mobNo.getText().toString();
             String regex = "\\(|\\)|\\-|";
             String uMobNo = code + mob ;
-            String mobileNo = uMobNo.replaceAll(regex, "");
+            mobileNo = uMobNo.replaceAll(regex, "");
             mobileNo = uMobNo.replaceAll(" " ,"");
             String uCity = city.getText().toString();
             String uState = state.getText().toString();
@@ -369,8 +375,11 @@ public class SignUpActivity extends Activity implements Animation.AnimationListe
 
             String uName = name.getText().toString();
             String uEmail = email.getText().toString();
-            String uContact = mobNo.getText().toString();
+            String uContact = mobileNo;
             String uPass = password.getText().toString();
+            String uCity = city.getText().toString();
+            String uState = state.getText().toString();
+            String uCountry = country.getText().toString();
 
             SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
             Calendar calendar = GregorianCalendar.getInstance();
@@ -386,7 +395,7 @@ public class SignUpActivity extends Activity implements Animation.AnimationListe
                     String registrationID = null;
                     try {
                         registrationID = jsnObject.getString(Constant.REGISTRATION_ID);
-                        User.createUser(getDatabase(), uEmail, uName, uPass, uContact, registrationID, updateTime);
+                        User.createUser(getDatabase(), uEmail, uName, uPass, uContact, uCity, uState, uCountry,registrationID, updateTime);
                         Log.e( TAG, registrationID);
                     } catch (JSONException e) {
                         e.printStackTrace();

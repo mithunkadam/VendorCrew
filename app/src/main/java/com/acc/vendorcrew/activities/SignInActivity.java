@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.acc.vendorcrew.LinearLayoutThatDetectsSoftKeyboard;
 import com.acc.vendorcrew.R;
 import com.acc.vendorcrew.constant.Constant;
 import com.acc.vendorcrew.connectivity.ConnectionDetector;
@@ -38,7 +39,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SignInActivity extends Activity implements Animation.AnimationListener {
+public class SignInActivity extends Activity implements Animation.AnimationListener, LinearLayoutThatDetectsSoftKeyboard.Listener {
 
     Button signUp, signIn;
     EditText uEmail, uPassword;
@@ -61,6 +62,11 @@ public class SignInActivity extends Activity implements Animation.AnimationListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+
+
+
+        /*LinearLayoutThatDetectsSoftKeyboard mainLayout = (LinearLayoutThatDetectsSoftKeyboard)findViewById(R.id.mainLayout);
+        mainLayout.setListener(this);*/
 
         Typeface custom_font_regular = Typeface.createFromAsset(getAssets() , "font/ProximaNova-Reg.ttf");
         Typeface custom_font_bold = Typeface.createFromAsset(getAssets() , "font/ProximaNova-Bold.ttf");
@@ -138,7 +144,7 @@ public class SignInActivity extends Activity implements Animation.AnimationListe
 
     private boolean isValidPassword() {
         final String upassword = uPassword.getText().toString();
-        if (isValidPassword(upassword)) {
+        if (!isValidPassword(upassword)) {
             errorPassword.setVisibility(View.VISIBLE);
             errorPassword.startAnimation(animSlideDown);
             return false;
@@ -150,11 +156,7 @@ public class SignInActivity extends Activity implements Animation.AnimationListe
     }
 
     private boolean isValidEmail(String uemail) {
-
-        String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-        Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-        Matcher matcher = pattern.matcher(uemail);
-        return matcher.matches();
+        return uemail.equals("");
     }
 
     private boolean isValidPassword(String upassword) {
@@ -178,6 +180,11 @@ public class SignInActivity extends Activity implements Animation.AnimationListe
 
     @Override
     public void onAnimationRepeat(Animation animation) {
+
+    }
+
+    @Override
+    public void onSoftKeyboardShown(boolean isShowing) {
 
     }
 
