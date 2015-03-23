@@ -2,10 +2,13 @@ package com.acc.vendorcrew.activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
@@ -50,9 +53,16 @@ public class SignInActivity extends Activity implements Animation.AnimationListe
     ConnectionDetector cd;
     Animation animSlideUp, animSlideDown;
 
+    public static final String PREFS_NAME = "MyPrefsFile";
+
     private JSONParser jParser;
     JSONArray jsonArray = null;
     final String TAG = "CouchbaseDB";
+
+    private Context mContext = this;
+    protected SharedPreferences preferences;
+    protected SharedPreferences.Editor editor;
+
     /*private Manager manager;
     Database database;*/
     // create a name for the database and make sure the name is legal
@@ -124,6 +134,7 @@ public class SignInActivity extends Activity implements Animation.AnimationListe
             public void onClick(View v) {
                 Intent i = new Intent(SignInActivity.this, SignUpActivity.class);
                 startActivity(i);
+                finish();
             }
         });
 
@@ -229,6 +240,11 @@ public class SignInActivity extends Activity implements Animation.AnimationListe
                 try {
 
                     String _id = jsnObject.getString("_id");
+
+                    SharedPreferences settings = getSharedPreferences(SignInActivity.PREFS_NAME, 0); // 0 - for private mode
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putBoolean("hasLoggedIn", true);
+                    editor.commit();
 
                     Intent intent = new Intent(SignInActivity.this, AddVendorCategoryActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -404,8 +404,14 @@ public class SignUpActivity extends Activity implements Animation.AnimationListe
 //                    SharedPreferences.Editor editor = settings.edit();
                     preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
                     editor = preferences.edit();
-                    editor.putString("registeredUser", registrationID);
+                    editor.putString("registeredUser", registrationID).commit();
+
+                    SharedPreferences settings = getSharedPreferences(SignInActivity.PREFS_NAME, 0); // 0 - for private mode
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putBoolean("hasLoggedIn", true);
                     editor.commit();
+
+
 
                     Intent intent = new Intent(SignUpActivity.this, ValidateUserActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

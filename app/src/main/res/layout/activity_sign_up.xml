@@ -33,6 +33,12 @@
             android:textSize="12sp" />
     </LinearLayout>
 
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearLayout">
+
     <EditText
         android:id="@+id/name"
         android:layout_width="280dp"
@@ -44,9 +50,7 @@
         android:textColor="@color/text_color"
         android:background="@drawable/appcompat_edit_text_holo_light"
         android:inputType="textPersonName"
-        android:layout_below="@id/linearLayout"
-        android:layout_alignLeft="@+id/password"
-        android:layout_alignStart="@+id/password">
+        android:layout_centerHorizontal="true">
     <requestFocus />
 </EditText>
 
@@ -255,11 +259,13 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"/>
 
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/disclaimer_text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/sign_up"
+        android:layout_below="@+id/relativeLayout"
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:text="@string/disclaimer_text1"
@@ -310,6 +316,5 @@
         android:layout_marginBottom="10dp"
         android:clickable="true"/>
 
-</RelativeLayout>
-
-    </ScrollView>
+    </RelativeLayout>
+</ScrollView>

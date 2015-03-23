@@ -1,10 +1,13 @@
 package com.acc.vendorcrew.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -14,8 +17,13 @@ import com.acc.vendorcrew.R;
 
 public class MainActivity extends Activity {
 
+    public static final String PREFS_NAME = "MyPrefsFile";
     private static int SPLASH_TIME_OUT = 5000;
     TextView text;
+    boolean isLoggedIn;
+
+    private SharedPreferences preferences;
+    private Context mContext = this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +31,9 @@ public class MainActivity extends Activity {
         text = (TextView) findViewById(R.id.text);
         Typeface custom_font_regular = Typeface.createFromAsset(getAssets() , "font/ProximaNova-Reg.ttf");
         Typeface custom_font_bold = Typeface.createFromAsset(getAssets() , "font/ProximaNova-Bold.ttf");
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        isLoggedIn = preferences.getBoolean("logIN",false);
 
         text.setTypeface(custom_font_bold);
 
@@ -34,10 +45,18 @@ public class MainActivity extends Activity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app next activity
-                Intent i = new Intent(MainActivity.this, SignInActivity.class);
-                startActivity(i);
-                // close this activity
-                finish();
+                SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
+                boolean hasLoggedIn = settings.getBoolean("hasLoggedIn", false);
+
+                if(hasLoggedIn){
+                    Intent i = new Intent(MainActivity.this, AddVendorCategoryActivity.class);
+                    startActivity(i);
+                    finish();
+                }else{
+                    Intent i = new Intent(MainActivity.this, SignInActivity.class);
+                    startActivity(i);
+                    finish();
+                }
             }
         }, SPLASH_TIME_OUT);
     }
